@@ -32,6 +32,14 @@ public class ChessPiece {
         return Objects.hash(pieceColor, type);
     }
 
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type +
+                '}';
+    }
+
     /**
      * The various different chess piece options
      */
@@ -60,6 +68,7 @@ public class ChessPiece {
         //throw new RuntimeException("Not implemented");
     }
 
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -73,6 +82,7 @@ public class ChessPiece {
         int col = myPosition.getColumn();
         PieceType piece = getPieceType();
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+
         //Movement logic for bishop
         if(piece==PieceType.BISHOP) {
             //look NorthEast
@@ -80,8 +90,12 @@ public class ChessPiece {
                 //check if space is occupied by a piece
                 ChessPosition pos_temp = new ChessPosition(row + i, col + i);
                 if (board.isEmpty(pos_temp)) {
-                    moves.add(new ChessMove(myPosition, pos_temp, piece));
-                    System.out.printf("Adding move to available space: %d, %d%n", row + i, col + i); //todo: remove debug
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    //System.out.printf("Adding move to available space: %d, %d from %d, %d%n", row + i, col + i, row, col);
+                }else if(board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    break;
                 }
             }
             //look Southeast
@@ -89,8 +103,12 @@ public class ChessPiece {
                 //check if space is occupied by a piece
                 ChessPosition pos_temp = new ChessPosition(row - i, col + i);
                 if (board.isEmpty(pos_temp)) {
-                    moves.add(new ChessMove(myPosition, pos_temp, piece));
-                    System.out.printf("Adding move to available space: %d, %d%n", row - i, col + i); //todo: remove debug
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    //System.out.printf("Adding move to available space: %d, %d%n", row - i, col + i);
+                }else if(board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    break;
                 }
             }
             //look SouthWest
@@ -98,8 +116,12 @@ public class ChessPiece {
                 //check if space is occupied by a piece
                 ChessPosition pos_temp = new ChessPosition(row - i, col - i);
                 if (board.isEmpty(pos_temp)) {
-                    moves.add(new ChessMove(myPosition, pos_temp, piece));
-                    System.out.printf("Adding move to available space: %d, %d%n", row - i, col - i); //todo: remove debug
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    //System.out.printf("Adding move to available space: %d, %d%n", row - i, col - i);
+                }else if(board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    break;
                 }
             }
             //look NorthWest
@@ -107,8 +129,12 @@ public class ChessPiece {
                 //check if space is occupied by a piece
                 ChessPosition pos_temp = new ChessPosition(row + i, col - i);
                 if (board.isEmpty(pos_temp)) {
-                    moves.add(new ChessMove(myPosition, pos_temp, piece));
-                    System.out.printf("Adding move to available space: %d, %d%n", row + i, col - i); //todo: remove debug
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    //System.out.printf("Adding move to available space: %d, %d%n", row + i, col - i);
+                }else if(board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                    break;
                 }
             }
         }

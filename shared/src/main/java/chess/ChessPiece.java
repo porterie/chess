@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -15,6 +16,20 @@ public class ChessPiece {
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
        this.pieceColor = pieceColor;
        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 
     /**
@@ -59,56 +74,44 @@ public class ChessPiece {
         PieceType piece = getPieceType();
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
         //Movement logic for bishop
-        if(piece==PieceType.BISHOP){
-            //look NorthWest
-            for(int i = col; i >= 1; i--){
-                for(int j = row; j <= 8; j++){
-                    //check if space is occupied by a piece
-                    ChessPosition pos_temp = new ChessPosition(j,i);
-                    if(board.isEmpty(pos_temp)){
-                        moves.add(new ChessMove(myPosition, pos_temp, piece));
-                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
-                    }
+        if(piece==PieceType.BISHOP) {
+            //look NorthEast
+            for (int i = 1; (col + i <=8) && (row + i <= 8); i++) {
+                //check if space is occupied by a piece
+                ChessPosition pos_temp = new ChessPosition(row + i, col + i);
+                if (board.isEmpty(pos_temp)) {
+                    moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    System.out.printf("Adding move to available space: %d, %d%n", row + i, col + i); //todo: remove debug
                 }
             }
-            //look NorthEast
-            for(int i = col; i <= 8; i++){
-                for(int j = row; j <= 8; j++){
-                    //check if space is occupied by a piece
-                    ChessPosition pos_temp = new ChessPosition(j,i);
-                    if(board.isEmpty(pos_temp)){
-                        moves.add(new ChessMove(myPosition, pos_temp, piece));
-                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
-
-                    }
+            //look Southeast
+            for (int i = 1; (col + i <= 8) && (row - i >= 1); i++) {
+                //check if space is occupied by a piece
+                ChessPosition pos_temp = new ChessPosition(row - i, col + i);
+                if (board.isEmpty(pos_temp)) {
+                    moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    System.out.printf("Adding move to available space: %d, %d%n", row - i, col + i); //todo: remove debug
                 }
             }
             //look SouthWest
-            for(int i = col; i >= 1; i--){
-                for(int j = row; j >= 1; j--){
-                    //check if space is occupied by a piece
-                    ChessPosition pos_temp = new ChessPosition(j,i);
-                    if(board.isEmpty(pos_temp)){
-                        moves.add(new ChessMove(myPosition, pos_temp, piece));
-                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
-
-                    }
+            for (int i = 1; (col - i >= 1) && (row - i >= 1); i++) {
+                //check if space is occupied by a piece
+                ChessPosition pos_temp = new ChessPosition(row - i, col - i);
+                if (board.isEmpty(pos_temp)) {
+                    moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    System.out.printf("Adding move to available space: %d, %d%n", row - i, col - i); //todo: remove debug
                 }
             }
-            //look SouthEast
-            for(int i = col; i <= 8; i++){
-                for(int j = row; j >= 1; j--){
-                    //check if space is occupied by a piece
-                    ChessPosition pos_temp = new ChessPosition(j,i);
-                    if(board.isEmpty(pos_temp)){
-                        moves.add(new ChessMove(myPosition, pos_temp, piece));
-                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
-
-                    }
+            //look NorthWest
+            for (int i = 1; (col - i >= 1) && (row + i <= 8); i++) {
+                //check if space is occupied by a piece
+                ChessPosition pos_temp = new ChessPosition(row + i, col - i);
+                if (board.isEmpty(pos_temp)) {
+                    moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    System.out.printf("Adding move to available space: %d, %d%n", row + i, col - i); //todo: remove debug
                 }
             }
         }
-
         return moves;
         //throw new RuntimeException("Not implemented");
     }

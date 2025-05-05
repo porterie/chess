@@ -67,6 +67,7 @@ public class ChessPiece {
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
                         moves.add(new ChessMove(myPosition, pos_temp, piece));
+                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
                     }
                 }
             }
@@ -77,6 +78,8 @@ public class ChessPiece {
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
                         moves.add(new ChessMove(myPosition, pos_temp, piece));
+                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
+
                     }
                 }
             }
@@ -87,6 +90,8 @@ public class ChessPiece {
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
                         moves.add(new ChessMove(myPosition, pos_temp, piece));
+                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
+
                     }
                 }
             }
@@ -97,6 +102,8 @@ public class ChessPiece {
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
                         moves.add(new ChessMove(myPosition, pos_temp, piece));
+                        System.out.printf("Adding move to available space: %d, %d%n",j, i); //todo: remove debug
+
                     }
                 }
             }

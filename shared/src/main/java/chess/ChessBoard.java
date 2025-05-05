@@ -36,6 +36,10 @@ public class ChessBoard {
         //throw new RuntimeException("Not implemented");
     }
 
+    public Boolean isEmpty(ChessPosition position) {
+        return getPiece(position) == null;
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)

@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -47,6 +48,56 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        PieceType piece = getPieceType();
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        //Movement logic for bishop
+        if(piece==PieceType.BISHOP){
+            //look NorthWest
+            for(int i = col; i >= 0; i--){
+                for(int j = row; j < 8; j++){
+                    //check if space is occupied by a piece
+                    ChessPosition pos_temp = new ChessPosition(j,i);
+                    if(board.isEmpty(pos_temp)){
+                        moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    }
+                }
+            }
+            //look NorthEast
+            for(int i = col; i < 8; i++){
+                for(int j = row; j < 8; j++){
+                    //check if space is occupied by a piece
+                    ChessPosition pos_temp = new ChessPosition(j,i);
+                    if(board.isEmpty(pos_temp)){
+                        moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    }
+                }
+            }
+            //look SouthWest
+            for(int i = col; i >= 0; i--){
+                for(int j = row; j >= 0; j--){
+                    //check if space is occupied by a piece
+                    ChessPosition pos_temp = new ChessPosition(j,i);
+                    if(board.isEmpty(pos_temp)){
+                        moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    }
+                }
+            }
+            //look SouthEast
+            for(int i = col; i < 8; i++){
+                for(int j = row; j >= 0; j--){
+                    //check if space is occupied by a piece
+                    ChessPosition pos_temp = new ChessPosition(j,i);
+                    if(board.isEmpty(pos_temp)){
+                        moves.add(new ChessMove(myPosition, pos_temp, piece));
+                    }
+                }
+            }
+        }
+
+        return moves;
+        //throw new RuntimeException("Not implemented");
     }
 }

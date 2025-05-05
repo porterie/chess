@@ -61,8 +61,8 @@ public class ChessPiece {
         //Movement logic for bishop
         if(piece==PieceType.BISHOP){
             //look NorthWest
-            for(int i = col; i >= 0; i--){
-                for(int j = row; j < 8; j++){
+            for(int i = col; i >= 1; i--){
+                for(int j = row; j <= 8; j++){
                     //check if space is occupied by a piece
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
@@ -72,8 +72,8 @@ public class ChessPiece {
                 }
             }
             //look NorthEast
-            for(int i = col; i < 8; i++){
-                for(int j = row; j < 8; j++){
+            for(int i = col; i <= 8; i++){
+                for(int j = row; j <= 8; j++){
                     //check if space is occupied by a piece
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
@@ -84,8 +84,8 @@ public class ChessPiece {
                 }
             }
             //look SouthWest
-            for(int i = col; i >= 0; i--){
-                for(int j = row; j >= 0; j--){
+            for(int i = col; i >= 1; i--){
+                for(int j = row; j >= 1; j--){
                     //check if space is occupied by a piece
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){
@@ -96,8 +96,8 @@ public class ChessPiece {
                 }
             }
             //look SouthEast
-            for(int i = col; i < 8; i++){
-                for(int j = row; j >= 0; j--){
+            for(int i = col; i <= 8; i++){
+                for(int j = row; j >= 1; j--){
                     //check if space is occupied by a piece
                     ChessPosition pos_temp = new ChessPosition(j,i);
                     if(board.isEmpty(pos_temp)){

@@ -96,6 +96,9 @@ public class ChessPiece {
                     //capture case
                     moves.add(new ChessMove(myPosition, pos_temp, null));
                     break;
+                }else if(board.getPiece(pos_temp).getTeamColor() == this.getTeamColor()){
+                    //blocked case
+                    break;
                 }
             }
             //look Southeast
@@ -108,6 +111,9 @@ public class ChessPiece {
                 }else if(board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
                     //capture case
                     moves.add(new ChessMove(myPosition, pos_temp, null));
+                    break;
+                }else if(board.getPiece(pos_temp).getTeamColor() == this.getTeamColor()){
+                    //blocked case
                     break;
                 }
             }
@@ -122,6 +128,9 @@ public class ChessPiece {
                     //capture case
                     moves.add(new ChessMove(myPosition, pos_temp, null));
                     break;
+                }else if(board.getPiece(pos_temp).getTeamColor() == this.getTeamColor()){
+                    //blocked case
+                    break;
                 }
             }
             //look NorthWest
@@ -135,6 +144,90 @@ public class ChessPiece {
                     //capture case
                     moves.add(new ChessMove(myPosition, pos_temp, null));
                     break;
+                }else if(board.getPiece(pos_temp).getTeamColor() == this.getTeamColor()){
+                    //blocked case
+                    break;
+                }
+            }
+        }else if(piece==PieceType.KING){ //KING
+            //North
+            if(row+1 <= 8){
+                ChessPosition pos_temp = new ChessPosition(row+1, col);
+                if (board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }//no blocked case neccessary
+            }
+            //Northeast
+            if(row+1 <= 8 && col+1 <= 8){
+                ChessPosition pos_temp = new ChessPosition(row+1, col+1);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }
+            }
+            //East
+            if(col + 1 <= 8){
+                ChessPosition pos_temp = new ChessPosition(row, col+1);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }
+            }
+            //Southeast
+            if(col + 1 <=8 && row - 1 >= 0){
+                ChessPosition pos_temp = new ChessPosition(row-1, col+1);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }
+            }
+            //South
+            if(row - 1 >= 0){
+                ChessPosition pos_temp = new ChessPosition(row-1, col);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }
+            }
+            //Southwest
+            if(row-1 >= 0 && col-1 >= 0){
+                ChessPosition pos_temp = new ChessPosition(row-1, col-1);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }
+            }
+            //West
+            if(col -1 >= 0){
+                ChessPosition pos_temp = new ChessPosition(row, col-1);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }
+            }
+            //Northwest
+            if(col-1 >= 0 && row + 1 <= 8){
+                ChessPosition pos_temp = new ChessPosition(row+1, col-1);
+                if(board.isEmpty(pos_temp)){
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
+                }else if (board.getPiece(pos_temp).getTeamColor() != this.getTeamColor()){
+                    //capture case
+                    moves.add(new ChessMove(myPosition, pos_temp, null));
                 }
             }
         }

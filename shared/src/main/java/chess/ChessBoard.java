@@ -72,14 +72,14 @@ public class ChessBoard {
         addPiece(bBishop2Pos, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
         //queen
         ChessPosition bQueenPos = new ChessPosition(8, 4);
-        addPiece(bQueenPos, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+        addPiece(bQueenPos, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
         //king
         ChessPosition bKingPos = new ChessPosition(8, 5);
         addPiece(bKingPos, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
 
         //sets black pawns
         for (int j = 1; j <= 8; j++){
-            ChessPosition pawnPos = new ChessPosition(j, 7);
+            ChessPosition pawnPos = new ChessPosition(7, j);
             addPiece(pawnPos, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
 
@@ -101,7 +101,7 @@ public class ChessBoard {
         addPiece(wBishop2Pos, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
         //queen
         ChessPosition wQueenPos = new ChessPosition(1, 4);
-        addPiece(wQueenPos, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+        addPiece(wQueenPos, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
         //king
         ChessPosition wKingPos = new ChessPosition(1, 5);
         addPiece(wKingPos, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
@@ -109,7 +109,7 @@ public class ChessBoard {
         //white pawns
         //sets white pawns
         for (int j = 1; j <= 8; j++){
-            ChessPosition pawnPos = new ChessPosition(j, 2);
+            ChessPosition pawnPos = new ChessPosition(2, j);
             addPiece(pawnPos, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
         }
 

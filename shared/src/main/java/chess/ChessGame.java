@@ -11,7 +11,7 @@ import java.util.Collection;
 public class ChessGame {
 
     private TeamColor currentTeam = TeamColor.WHITE; //initialize team to white
-
+    private ChessBoard gameBoard = new ChessBoard();
     public ChessGame() {
 
     }
@@ -48,7 +48,9 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        ChessPiece gamePiece = gameBoard.getPiece(startPosition);
+        return gamePiece.pieceMoves(gameBoard, startPosition);
     }
 
     /**
@@ -58,7 +60,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        if (validMoves(move.getStartPosition()).contains(move)){
+            //move valid
+            throw new RuntimeException("not implemented (I wrote this one");
+        }else{
+            //move invalid
+            throw new InvalidMoveException("Invalid move");
+        }
     }
 
     /**

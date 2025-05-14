@@ -36,7 +36,16 @@ public class ChessGame {
     }
 
     public ChessPosition findKing(TeamColor color){
-
+        ChessPosition kingPos = null;
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++){
+                ChessPosition pos = new ChessPosition(j,i);
+                if (gameBoard.getPiece(pos).getPieceType()== ChessPiece.PieceType.KING && gameBoard.getPiece(pos).getTeamColor()==color){
+                    kingPos = pos;
+                }
+            }
+        }
+        return kingPos;
     }
 
     @Override
@@ -114,7 +123,262 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean check = false; //initialize to false
+        ChessPosition myPosition = findKing(teamColor);
+        //Can only be captured from one of the cardinal directions, diagonals, or knight movement.
+
+        //BORROWED FROM QUEEN MOVEMENT LOGIC
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        //North
+        for(int i = 1; i+row <= 8; i++){//cardinal direction check logic
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row + i, col);
+            if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                //capture case
+                if(i==1){
+                    //king
+                    if(gameBoard.getPiece(pos_temp).getPieceType() == (ChessPiece.PieceType.KING)){
+                        check = true;
+                    }
+                }
+               if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                   check = true;
+               if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
+                   check = true;
+               break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //East
+        for(int i = 1; i +col <= 8; i++){
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row, i + col);
+            if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                //capture case
+                if(i==1){
+                    //king
+                    if(gameBoard.getPiece(pos_temp).getPieceType() == (ChessPiece.PieceType.KING)){
+                        check = true;
+                    }
+                }
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //South
+        for(int i = 1; row-i >= 1; i++){
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row - i, col);
+            if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                //capture case
+                if(i==1){
+                    //king
+                    if(gameBoard.getPiece(pos_temp).getPieceType() == (ChessPiece.PieceType.KING)){
+                        check = true;
+                    }
+                }
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //West
+        for(int i = 1; col-i >= 1; i++){
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row, col-i);
+            if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                //capture case
+                if(i==1){
+                    //king
+                    if(gameBoard.getPiece(pos_temp).getPieceType() == (ChessPiece.PieceType.KING)){
+                        check = true;
+                    }
+                }
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //look NorthEast
+        for (int i = 1; (col + i <=8) && (row + i <= 8); i++) {//check logic for diagonal
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row + i, col + i);
+            if(!gameBoard.isEmpty(pos_temp) && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(i == 1){//pawn and king
+                    if(teamColor==TeamColor.WHITE)
+                        if(gameBoard.getPiece(pos_temp).getPieceType()==ChessPiece.PieceType.PAWN)
+                            check = true;
+                    if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KING)
+                        check = true;
+                }
+                //bishop, queen
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //look Southeast
+        for (int i = 1; (col + i <= 8) && (row - i >= 1); i++) {
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row - i, col + i);
+            if(!gameBoard.isEmpty(pos_temp) && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(i == 1){//pawn and king
+                    if(teamColor==TeamColor.BLACK)
+                        if(gameBoard.getPiece(pos_temp).getPieceType()==ChessPiece.PieceType.PAWN)
+                            check = true;
+                    if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KING)
+                        check = true;
+                }
+                //bishop, queen
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //look SouthWest
+        for (int i = 1; (col - i >= 1) && (row - i >= 1); i++) {
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row - i, col - i);
+            if(!gameBoard.isEmpty(pos_temp) && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(i == 1){//pawn and king
+                    if(teamColor==TeamColor.BLACK)
+                        if(gameBoard.getPiece(pos_temp).getPieceType()==ChessPiece.PieceType.PAWN)
+                            check = true;
+                    if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KING)
+                        check = true;
+                }
+                //bishop, queen
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+        //look NorthWest
+        for (int i = 1; (col - i >= 1) && (row + i <= 8); i++) {
+            //check if space is occupied by a piece
+            ChessPosition pos_temp = new ChessPosition(row + i, col - i);
+            if(!gameBoard.isEmpty(pos_temp) && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(i == 1){//pawn and king
+                    if(teamColor==TeamColor.WHITE)
+                        if(gameBoard.getPiece(pos_temp).getPieceType()==ChessPiece.PieceType.PAWN)
+                            check = true;
+                    if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KING)
+                        check = true;
+                }
+                //bishop, queen
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.QUEEN)
+                    check = true;
+                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
+                    check = true;
+                break;
+            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+                //blocked case
+                break;
+            }
+        }
+
+        //NOW LOGIC BORROWED FROM KNIGHT MOVEMENT
+        //North northeast
+        if(row+2 <= 8 && col +1 <= 8){
+            ChessPosition pos_temp = new ChessPosition(row+2, col+1);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        //East northeast
+        if(row+1 <= 8 && col + 2 <= 8){
+            ChessPosition pos_temp = new ChessPosition(row+1, col+2);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        // East Southeast
+        if(row-1 >= 1 && col + 2 <= 8){
+            ChessPosition pos_temp = new ChessPosition(row-1, col+2);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        //South southeast
+        if(row-2 >= 1 && col+1 <=8){
+            ChessPosition pos_temp = new ChessPosition(row-2, col+1);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        //South southwest
+        if(row-2 >= 1 && col-1 >= 1){
+            ChessPosition pos_temp = new ChessPosition(row-2, col-1);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        //West southwest
+        if(row-1 >= 1 && col-2 >= 1){
+            ChessPosition pos_temp = new ChessPosition(row-1, col-2);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        //West Northwest
+        if(row+1 <= 8 && col -2 >= 1){
+            ChessPosition pos_temp = new ChessPosition(row+1, col-2);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+        //North northwest
+        if(row+2 <= 8 && col -1 >= 1){
+            ChessPosition pos_temp = new ChessPosition(row+2, col-1);
+            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+                if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
+                    check = true;
+            }
+        }
+
+
+        return check;
     }
 
     /**

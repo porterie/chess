@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -40,7 +41,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++){
                 ChessPosition pos = new ChessPosition(j,i);
-                if (gameBoard.getPiece(pos).getPieceType()== ChessPiece.PieceType.KING && gameBoard.getPiece(pos).getTeamColor()==color){
+                if (gameBoard.getPiece(pos)!=null && gameBoard.getPiece(pos).getPieceType()== ChessPiece.PieceType.KING && gameBoard.getPiece(pos).getTeamColor()==color){
                     kingPos = pos;
                 }
             }
@@ -88,8 +89,29 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         //throw new RuntimeException("Not implemented");
         ChessPiece gamePiece = gameBoard.getPiece(startPosition);
+        ChessBoard testBoard = gameBoard;
         if(gamePiece!=null) {
-            return gamePiece.pieceMoves(gameBoard, startPosition);
+            Collection<ChessMove> moves = gamePiece.pieceMoves(gameBoard, startPosition);
+            Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
+            if(isInCheck(currentTeam)){
+                //movement forced. move must remove check
+                //do test moves
+                for(ChessMove move : moves){
+                    ChessPiece movePiece = gameBoard.getPiece(move.getStartPosition());
+                    ChessPiece tempPiece = gameBoard.getPiece(move.getEndPosition());
+                    gameBoard.addPiece(move.getStartPosition(),null);
+                    gameBoard.addPiece(move.getEndPosition(), movePiece);
+                    if(!isInCheck(currentTeam))
+                        validMoves.add(move);
+                    //return pieces
+                    gameBoard.addPiece(move.getStartPosition(),movePiece);
+                    gameBoard.addPiece(move.getEndPosition(),tempPiece);
+
+                }
+            }else{
+                validMoves = moves;
+            }
+            return validMoves;
         }
         else{
             return Collections.emptyList();
@@ -151,7 +173,7 @@ public class ChessGame {
                if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
                    check = true;
                break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -173,7 +195,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -195,7 +217,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -217,7 +239,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.ROOK)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -240,7 +262,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -263,7 +285,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -286,7 +308,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -309,7 +331,7 @@ public class ChessGame {
                 if(gameBoard.getPiece(pos_temp).getPieceType() == ChessPiece.PieceType.BISHOP)
                     check = true;
                 break;
-            }else if(gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
+            }else if(gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() == teamColor){
                 //blocked case
                 break;
             }
@@ -319,7 +341,7 @@ public class ChessGame {
         //North northeast
         if(row+2 <= 8 && col +1 <= 8){
             ChessPosition pos_temp = new ChessPosition(row+2, col+1);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -327,7 +349,7 @@ public class ChessGame {
         //East northeast
         if(row+1 <= 8 && col + 2 <= 8){
             ChessPosition pos_temp = new ChessPosition(row+1, col+2);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -335,7 +357,7 @@ public class ChessGame {
         // East Southeast
         if(row-1 >= 1 && col + 2 <= 8){
             ChessPosition pos_temp = new ChessPosition(row-1, col+2);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -343,7 +365,7 @@ public class ChessGame {
         //South southeast
         if(row-2 >= 1 && col+1 <=8){
             ChessPosition pos_temp = new ChessPosition(row-2, col+1);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -351,7 +373,7 @@ public class ChessGame {
         //South southwest
         if(row-2 >= 1 && col-1 >= 1){
             ChessPosition pos_temp = new ChessPosition(row-2, col-1);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -359,7 +381,7 @@ public class ChessGame {
         //West southwest
         if(row-1 >= 1 && col-2 >= 1){
             ChessPosition pos_temp = new ChessPosition(row-1, col-2);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -367,7 +389,7 @@ public class ChessGame {
         //West Northwest
         if(row+1 <= 8 && col -2 >= 1){
             ChessPosition pos_temp = new ChessPosition(row+1, col-2);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }
@@ -375,7 +397,7 @@ public class ChessGame {
         //North northwest
         if(row+2 <= 8 && col -1 >= 1){
             ChessPosition pos_temp = new ChessPosition(row+2, col-1);
-            if (gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
+            if (gameBoard.getPiece(pos_temp) != null && gameBoard.getPiece(pos_temp).getTeamColor() != teamColor){
                 if(gameBoard.getPiece(pos_temp).getPieceType()== ChessPiece.PieceType.KNIGHT)
                     check = true;
             }

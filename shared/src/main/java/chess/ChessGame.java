@@ -459,6 +459,8 @@ public class ChessGame {
                         stalemate = false;
             }
         }
+        if(isInCheckmate(teamColor))
+            stalemate = false;
         return stalemate;
     }
 

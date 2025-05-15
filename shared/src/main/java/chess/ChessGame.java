@@ -417,8 +417,27 @@ public class ChessGame {
         boolean checkmate = false; //init to false
         ChessPosition kingPos = findKing(teamColor);
         if(isInCheck(teamColor)){//king is in check where it is
-         if(validMoves(kingPos).isEmpty())
-             checkmate = true;
+            checkmate = true;
+         //if(validMoves(kingPos).isEmpty())
+         //    checkmate = true;
+            for (int i = 1; i <= 8; i++){
+                for (int j = 1; j <= 8; j++){
+                    ChessPosition tempPos = new ChessPosition(j, i);
+                    if(!gameBoard.isEmpty(tempPos) && gameBoard.getPiece(tempPos).getTeamColor() == teamColor && !validMoves(tempPos).isEmpty()){
+                        for(ChessMove move : validMoves(tempPos)){
+                            //test move to see if it also results in check
+                            ChessPiece movePiece = gameBoard.getPiece(move.getStartPosition());
+                            ChessPiece tempPiece = gameBoard.getPiece(move.getEndPosition());
+                            gameBoard.addPiece(move.getEndPosition(), movePiece);
+                            gameBoard.addPiece(move.getStartPosition(), null);
+                            if(!isInCheck(teamColor))
+                                checkmate = false;
+                            gameBoard.addPiece(move.getEndPosition(), tempPiece);
+                            gameBoard.addPiece(move.getStartPosition(), movePiece);
+                        }
+                    }
+                }
+            }
         }
         return checkmate;
     }
@@ -435,7 +454,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j<=8; j++){
                 ChessPosition temp = new ChessPosition(j,i);
-                if(gameBoard.getPiece(temp).getTeamColor()==teamColor)
+                if(gameBoard.getPiece(temp) != null && gameBoard.getPiece(temp).getTeamColor()==teamColor)
                     if(!validMoves(temp).isEmpty())
                         stalemate = false;
             }

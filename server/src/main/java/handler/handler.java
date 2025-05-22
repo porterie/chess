@@ -48,4 +48,22 @@ public class handler {
             return "{ \"message\": \"Error: idk man.\" }";
         }
     }
+
+    public static Object logoutHandler(Request request, Response response, UserService userService) {
+        Gson serializer = new Gson();
+        LogoutRequest logOReq = new LogoutRequest(request.headers("Authorization"));
+
+        LogoutResult result = userService.logout(logOReq);
+        response.type("application/json");
+        if(!result.userFound()){
+            response.status(401);
+            return "{ \"message\": \"Error: unauthorized\" }";
+        }else {
+            response.status(200);
+            return "{}";
+        }/*else{
+            response.status(500);
+            return "{ \"message\": \"Error: idk man.\" }";
+        }*/
+    }
 }

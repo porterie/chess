@@ -14,7 +14,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public void createUser(UserData user) throws DataAccessException {
-        user = new UserData(user.getUsername(), user.getEmail(), user.getPasswd());
+        //user = new UserData(user.getUsername(), user.getEmail(), user.getPasswd());
         users.add(user);
     }
 
@@ -23,6 +23,7 @@ public class MemoryUserDAO implements UserDAO {
         for (UserData user : users){
             if(user.getUsername().equals(username)){
                 foundUser = user;
+                break;
             }
         }
         return foundUser;

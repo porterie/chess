@@ -17,7 +17,9 @@ public class UserService {
         try{
             if(userDAO.getUser(registerRequest.username())==null){//username free
                 userDAO.createUser(new UserData(registerRequest.username(),
-                        registerRequest.passwd(), registerRequest.email()));
+                        registerRequest.email(), registerRequest.password()));
+                System.out.println("Registered user with password: ");
+                System.out.println(registerRequest.password());
                 String newUsrToken = generateToken();
                 result = new RegisterResult(registerRequest.username(), newUsrToken);
                 authDAO.createAuthTokens(newUsrToken, registerRequest.username());//logs the users token
@@ -44,6 +46,9 @@ public class UserService {
                     //incorrect passwd
                     loginResult = new LoginResult(user.getUsername(), null);
                     System.out.println("Incorrect password for login");
+                    System.out.println(loginRequest.password());
+                    System.out.println(user.getPasswd());
+                    System.out.println(user.getUsername());
                 }
             }
         }catch(DataAccessException exception){

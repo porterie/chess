@@ -1,15 +1,13 @@
 package service;
-import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import dataaccess.UserDAO;
+import dataaccess.*;
 import model.UserData;
 
 import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
-    private UserDAO userDAO;
-    private AuthDAO authDAO;
+    private final UserDAO userDAO = new MemoryUserDAO();
+    private final AuthDAO authDAO = new MemoryAuthDAO();
     public static String generateToken() {
         //generates a viable token. Does not add to database!
         return UUID.randomUUID().toString();

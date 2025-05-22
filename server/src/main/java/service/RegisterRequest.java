@@ -1,7 +1,9 @@
 package service;
 
-public record UserData(
+public record RegisterRequest(
         String username,
         String passwd,
-        String email) {
+        String email
+) {
+
 }

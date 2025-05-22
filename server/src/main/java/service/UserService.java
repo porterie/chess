@@ -56,6 +56,14 @@ public class UserService {
         return loginResult;
     }
     public void logout(LogoutRequest logoutRequest){
-        //unimplemented
+        try {
+            if (authDAO.getAuthUser(logoutRequest.authToken()) != null) {
+                String username = authDAO.getAuthUser(logoutRequest.authToken()).getUsername();
+                userDAO.deleteUser(username);
+                authDAO.deleteAuthTokens(username);
+            }
+        }catch(DataAccessException exception){
+            System.out.println("Data access exception");
+        }
     }
 }

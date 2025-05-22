@@ -3,6 +3,8 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.UserData;
+
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
@@ -31,7 +33,27 @@ public class UserService {
         return result;
     }
     public LoginResult login(LoginRequest loginRequest){
-        return null; //unimplemented
+        LoginResult loginResult = null;
+        try{
+            UserData user = userDAO.getUser(loginRequest.username());
+            if(user!=null){
+                if(Objects.equals(user.getPasswd(), loginRequest.password())){
+                    //successful login
+                    String loginToken = generateToken();
+                    loginResult = new LoginResult(user.getUsername(), loginToken);
+                    authDAO.createAuthTokens(loginToken, user.getUsername());
+                }else{
+                    //incorrect passwd
+                    loginResult = new LoginResult(user.getUsername(), null);
+                    System.out.println("Incorrect password for login");
+                }
+            }
+        }catch(DataAccessException exception){
+            loginResult = null;
+            System.out.println(("data access exception"));
+        }
+
+        return loginResult;
     }
     public void logout(LogoutRequest logoutRequest){
         //unimplemented

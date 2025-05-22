@@ -1,8 +1,6 @@
 package handler;
 import com.google.gson.Gson;
-import service.RegisterRequest;
-import service.RegisterResult;
-import service.UserService;
+import service.*;
 import spark.Request;
 import spark.Response;
 
@@ -11,8 +9,28 @@ public class handler {
     public static Object registerHandler(Request request, Response response, UserService userService) {
         Gson serializer = new Gson();
         RegisterRequest regReq = serializer.fromJson(request.body(), RegisterRequest.class);
+
         RegisterResult result = userService.register(regReq);
         response.type("application/json");
-        return serializer.toJson(result);
+        if(result==null){
+            response.status(400);
+            return "{ \"message\": \"Error: bad request\" }";
+        }else if(result.username()==null){
+            response.status(403);
+            return "{ \"message\": \"Error: already taken\" }";
+        }else if(result.username().equals(regReq.username()) && result.authToken()!=null){
+            response.status(200);
+            return serializer.toJson(result);
+        }else{
+            response.status(500);
+            return "{ \"message\": \"Error: idk man.\" }";
+        }
+    }
+    public static Object loginHandler(Request request, Response response, UserService userService){
+        Gson serializer = new Gson();
+        LoginRequest logReq = serializer.fromJson(request.body(), LoginRequest.class);
+
+        LoginResult result = userService.login(logReq);
+        response.type("application/json");
     }
 }

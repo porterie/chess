@@ -8,10 +8,11 @@ import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO {
     private final HashMap<Integer, GameData> games = new HashMap<>();
-    private int gameID = 1;
-    public void createGame(String gameName) throws DataAccessException {
+    private int gameID = 0;
+    public Integer createGame(String gameName) throws DataAccessException {
         gameID++;
         games.put(gameID, new GameData(gameID, null, null, gameName, new ChessGame()));
+        return gameID;
     }
 
     public void clear() throws DataAccessException {
@@ -27,7 +28,6 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     public Collection<GameData> listGames() throws DataAccessException {
-        System.out.println("TODO: List games unimplemented!!!");
-        return null;
+        return games.values();
     }
 }

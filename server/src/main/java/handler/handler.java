@@ -66,4 +66,8 @@ public class handler {
             return "{ \"message\": \"Error: idk man.\" }";
         }*/
     }
+
+    public static Object listGamesHandler(Request request, Response response, GameService gameService) {
+        ListGamesResult gameList = gameService.listGames();
+    }
 }

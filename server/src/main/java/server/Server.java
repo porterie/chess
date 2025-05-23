@@ -1,11 +1,13 @@
 package server;
 
 import handler.handler;
+import service.GameService;
 import service.UserService;
 import spark.*;
 
 public class Server {
     UserService userService = new UserService();
+    GameService gameService = new GameService();
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
@@ -15,6 +17,7 @@ public class Server {
         Spark.post("/user", (request, response) -> handler.registerHandler(request, response, userService));
         Spark.post("/session", (request, response) -> handler.loginHandler(request, response, userService));
         Spark.delete("/session", (request, response) -> handler.logoutHandler(request, response, userService));
+        Spark.get("/game", (request, response) -> handler.listGamesHandler(request, response, gameService));
         //This line initializes the server and can be removed once you have a functioning endpoint
         Spark.init();
 

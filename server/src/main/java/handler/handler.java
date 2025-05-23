@@ -1,5 +1,6 @@
 package handler;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import service.*;
 import spark.Request;
 import spark.Response;
@@ -67,7 +68,29 @@ public class handler {
         }*/
     }
 
-    public static Object listGamesHandler(Request request, Response response, GameService gameService) {
-        ListGamesResult gameList = gameService.listGames();
+    public static Object listGamesHandler(Request request, Response response, GameService gameService, UserService userService) throws DataAccessException {
+        Gson serializer = new Gson();
+        String authToken = request.headers("Authorization");
+        response.type("application/json");
+        if(userService.authenticationValid(authToken)) {
+            var gameList = gameService.listGames().games().toArray();
+            response.status(200);
+            return serializer.toJson(gameList);
+        }else{
+            response.status(401);
+            return "{ \"message\": \"Error: unauthorized\" }";
+        }//TODO: add 500 error as neccessary
+    }
+    public static Object createGameHandler(Request request, Response response, GameService gameService, UserService userService) throws DataAccessException {
+        Gson serializer = new Gson();
+        String authToken = request.headers("Authorization");
+        response.type("application/json");
+        if(userService.authenticationValid(authToken)){
+            //FIXME: i AM HERE
+        }else{
+            response.status(401);
+            return "{ \"message\": \"Error: unauthorized\" }";
+        }
+        return null;
     }
 }

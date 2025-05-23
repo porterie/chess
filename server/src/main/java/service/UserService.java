@@ -8,6 +8,11 @@ import java.util.UUID;
 public class UserService {
     private final UserDAO userDAO = new MemoryUserDAO();
     private final AuthDAO authDAO = new MemoryAuthDAO();
+    public Boolean authenticationValid(String authToken) throws DataAccessException {
+        System.out.println("Authentication check");
+        System.out.println(authDAO.getAuthUser(authToken) != null);
+        return authDAO.getAuthUser(authToken) != null;
+    }
     public static String generateToken() {
         //generates a viable token. Does not add to database!
         return UUID.randomUUID().toString();

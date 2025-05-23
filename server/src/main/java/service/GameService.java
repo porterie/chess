@@ -12,7 +12,8 @@ import java.util.Objects;
 
 public class GameService {
     private final GameDAO gameDAO = new MemoryGameDAO();
-    ListGamesResult listGames() throws DataAccessException {
+
+    public ListGamesResult listGames() throws DataAccessException {
        /* //Constructs the JSON list of games
         String gameList = "\"games\":";
         Collection<GameData> games = gameDAO.listGames();
@@ -28,10 +29,10 @@ public class GameService {
 
         return new ListGamesResult(gameDAO.listGames());
     }
-    CreateGameResult createGame(String gameName) throws DataAccessException {
+    public CreateGameResult createGame(String gameName) throws DataAccessException {
         return new CreateGameResult(gameDAO.createGame(gameName));
     }
-    void joinGame(String playerColor, Integer gameID, String playerName) throws DataAccessException {
+    public void joinGame(String playerColor, Integer gameID, String playerName) throws DataAccessException {
         GameData game = gameDAO.getGame(gameID);
         if(Objects.equals(playerColor, "WHITE")){
             game.setWhiteUsername(playerName);

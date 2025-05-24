@@ -7,7 +7,7 @@ import spark.Response;
 
 import java.util.Objects;
 
-public class handler {
+public class Handler {
 
     public static Object registerHandler(Request request, Response response, UserService userService) {
         Gson serializer = new Gson();
@@ -83,7 +83,7 @@ public class handler {
         }else{
             response.status(401);
             return "{ \"message\": \"Error: unauthorized\" }";
-        }//TODO: add 500 error as neccessary
+        }
     }
     public static Object createGameHandler(Request request, Response response, GameService gameService, UserService userService) throws DataAccessException {
         Gson serializer = new Gson();

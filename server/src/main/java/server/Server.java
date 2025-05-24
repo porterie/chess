@@ -1,6 +1,6 @@
 package server;
 
-import handler.handler;
+import handler.Handler;
 import service.GameService;
 import service.UserService;
 import spark.*;
@@ -14,13 +14,13 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
-        Spark.post("/user", (request, response) -> handler.registerHandler(request, response, userService));
-        Spark.post("/session", (request, response) -> handler.loginHandler(request, response, userService));
-        Spark.delete("/session", (request, response) -> handler.logoutHandler(request, response, userService));
-        Spark.get("/game", (request, response) -> handler.listGamesHandler(request, response, gameService, userService));
-        Spark.post("/game", (request, response) -> handler.createGameHandler(request, response, gameService, userService));
-        Spark.put("/game", (request, response) -> handler.joinGameHandler(request, response, gameService, userService));
-        Spark.delete("/db", (request, response) -> handler.clearHandler(request, response, gameService, userService));
+        Spark.post("/user", (request, response) -> Handler.registerHandler(request, response, userService));
+        Spark.post("/session", (request, response) -> Handler.loginHandler(request, response, userService));
+        Spark.delete("/session", (request, response) -> Handler.logoutHandler(request, response, userService));
+        Spark.get("/game", (request, response) -> Handler.listGamesHandler(request, response, gameService, userService));
+        Spark.post("/game", (request, response) -> Handler.createGameHandler(request, response, gameService, userService));
+        Spark.put("/game", (request, response) -> Handler.joinGameHandler(request, response, gameService, userService));
+        Spark.delete("/db", (request, response) -> Handler.clearHandler(request, response, gameService, userService));
         //This line initializes the server and can be removed once you have a functioning endpoint
         Spark.init();
 

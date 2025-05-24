@@ -35,10 +35,14 @@ public class handler {
 
         LoginResult result = userService.login(logReq);
         response.type("application/json");
-        if(result==null){
+        if(logReq.username()==null || logReq.password() == null || result==null){
             response.status(400);
             return "{ \"message\": \"Error: bad request\" }";
-        }else if(result.authToken()==null){
+        }else if(result.username()==null){
+            response.status(401);
+            return "{ \"message\": \"Error: unauthorized\" }";
+        }
+        else if(result.authToken()==null){
             response.status(401);
             return "{ \"message\": \"Error: unauthorized\" }";
         }else if(Objects.equals(result.username(), logReq.username())){
@@ -73,9 +77,9 @@ public class handler {
         String authToken = request.headers("Authorization");
         response.type("application/json");
         if(userService.authenticationValid(authToken)) {
-            var gameList = gameService.listGames().games().toArray();
             response.status(200);
-            return serializer.toJson(gameList);
+            //System.out.print(gameService.listGames());
+            return gameService.listGames();
         }else{
             response.status(401);
             return "{ \"message\": \"Error: unauthorized\" }";
@@ -84,13 +88,67 @@ public class handler {
     public static Object createGameHandler(Request request, Response response, GameService gameService, UserService userService) throws DataAccessException {
         Gson serializer = new Gson();
         String authToken = request.headers("Authorization");
+        CreateGameRequest createGameRequest = serializer.fromJson(request.body(), CreateGameRequest.class);
         response.type("application/json");
-        if(userService.authenticationValid(authToken)){
-            //FIXME: i AM HERE
+        if(createGameRequest.gameName()==null){
+            response.status(400);
+            return "{ \"message\": \"Error: bad request\" }";
+
+        }else if(userService.authenticationValid(authToken)){
+            CreateGameResult result = gameService.createGame(createGameRequest.gameName());
+            response.status(200);
+            return serializer.toJson(result);
         }else{
             response.status(401);
             return "{ \"message\": \"Error: unauthorized\" }";
         }
-        return null;
+    }
+
+    public static Object joinGameHandler(Request request, Response response, GameService gameService, UserService userService) {
+        Gson serializer = new Gson();
+        String authToken = request.headers("Authorization");
+        response.type("application/json");
+        try {
+            JoinGameRequest joinGameRequest = serializer.fromJson(request.body(), JoinGameRequest.class);
+            if(!gameService.validGame(joinGameRequest.gameID()) ||
+                    !((Objects.equals(joinGameRequest.playerColor(), "WHITE")) || Objects.equals(joinGameRequest.playerColor(), "BLACK"))){
+                response.status(400);
+                return "{ \"message\": \"Error: bad request\" }";
+            }else if(Objects.equals(joinGameRequest.playerColor(), "WHITE") && !gameService.whiteFree(joinGameRequest.gameID())){
+                response.status(403);
+                return "{ \"message\": \"Error: already taken\" }";
+            }else if(Objects.equals(joinGameRequest.playerColor(), "BLACK") && !gameService.blackFree(joinGameRequest.gameID())){
+                response.status(403);
+                return "{ \"message\": \"Error: already taken\" }";
+            }else if(userService.authenticationValid(authToken)) {
+                String playerName = userService.getUser(authToken);
+                gameService.joinGame(joinGameRequest.playerColor(), joinGameRequest.gameID(), playerName);
+                response.status(200);
+                return"{}";
+            }else{
+                response.status(401);
+                System.out.println("Joingame final condition");
+                System.out.print(authToken);
+                System.out.println(joinGameRequest.gameID());
+                System.out.println(joinGameRequest.playerColor());
+                return "{ \"message\": \"Error: unauthorized\" }";
+            }
+
+        }catch(DataAccessException exception){
+            response.status(500);
+            return "{ \"message\": \"Database problem\" }";
+        }
+    }
+
+    public static Object clearHandler(Request request, Response response, GameService gameService, UserService userService) {
+        try{
+            userService.clearMemory();
+            gameService.clearMemory();
+            response.status(200);
+            return "{}";
+        }catch(DataAccessException exception){
+            response.status(500);
+            return "{ \"message\": \"Database problem\" }";
+        }
     }
 }

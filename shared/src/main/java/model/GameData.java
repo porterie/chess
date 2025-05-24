@@ -2,6 +2,8 @@ package model;
 
 import chess.ChessGame;
 
+import java.util.Objects;
+
 public class GameData {
     int gameID;
     String whiteUsername;
@@ -34,6 +36,7 @@ public class GameData {
 
     public String getWhiteUsername() {
         return whiteUsername;
+
     }
 
     public void setWhiteUsername(String name){

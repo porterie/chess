@@ -1,4 +1,4 @@
 package service;
 
-public record JoinGameRequest(Integer gameID, String color) {
+public record JoinGameRequest(Integer gameID, String playerColor) {
 }

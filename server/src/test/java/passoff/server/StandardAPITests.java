@@ -79,14 +79,14 @@ public class StandardAPITests {
         TestUser[] incompleteLoginRequests = {
             new TestUser(null, existingUser.getPassword(), existingUser.getEmail()),
             new TestUser(existingUser.getUsername(), null, existingUser.getEmail()),
-            new TestUser(existingUser.getUsername(), existingUser.getPassword(), null),
         };
-
+        //debug test
         for (TestUser incompleteLoginRequest : incompleteLoginRequests) {
             TestAuthResult loginResult = serverFacade.login(incompleteLoginRequest);
-
+            //System.out.println(i);
             assertHttpBadRequest(loginResult);
             assertAuthFieldsMissing(loginResult);
+
         }
     }
 

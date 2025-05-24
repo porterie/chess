@@ -45,7 +45,11 @@ public class GameService {
         //return new ListGamesResult(gameDAO.listGames());
     }
     public CreateGameResult createGame(String gameName) throws DataAccessException {
+        if(gameName!=null){
         return new CreateGameResult(gameDAO.createGame(gameName));
+        }else{
+            return null;
+        }
     }
     public Boolean validGame(Integer gameID) throws DataAccessException {
         if(gameID!=null && gameDAO.getGame(gameID)!=null){

@@ -110,7 +110,7 @@ public class handler {
         response.type("application/json");
         try {
             JoinGameRequest joinGameRequest = serializer.fromJson(request.body(), JoinGameRequest.class);
-            if(!gameService.validGame(joinGameRequest.gameID()) ||
+            /*if(!gameService.validGame(joinGameRequest.gameID()) ||
                     !((Objects.equals(joinGameRequest.playerColor(), "WHITE")) || Objects.equals(joinGameRequest.playerColor(), "BLACK"))){
                 response.status(400);
                 return "{ \"message\": \"Error: bad request\" }";
@@ -132,6 +132,28 @@ public class handler {
                 System.out.println(joinGameRequest.gameID());
                 System.out.println(joinGameRequest.playerColor());
                 return "{ \"message\": \"Error: unauthorized\" }";
+            }*/
+            boolean validAuth = userService.authenticationValid(authToken);
+            boolean colorWhite = (Objects.equals(joinGameRequest.playerColor(), "WHITE"));
+            boolean colorBlack = (Objects.equals(joinGameRequest.playerColor(), "BLACK"));
+            boolean invalidColor = !(colorWhite || colorBlack);
+            Integer gameID = joinGameRequest.gameID();
+            boolean validGameID = gameService.validGame(gameID);
+            if(!validAuth){
+                response.status(401);
+                return "{ \"message\": \"Error: unauthorized\" }";
+            }else if(!validGameID || invalidColor){
+                response.status(400);
+                return "{ \"message\": \"Error: bad request\" }";
+            }else if ((colorWhite && !gameService.whiteFree(gameID)) ||
+                    (colorBlack && !gameService.blackFree(gameID))){
+                response.status(403);
+                return "{ \"message\": \"Error: already taken\" }";
+            }else{
+                String playerName = userService.getUser(authToken);
+                gameService.joinGame(joinGameRequest.playerColor(), joinGameRequest.gameID(), playerName);
+                response.status(200);
+                return"{}";
             }
 
         }catch(DataAccessException exception){

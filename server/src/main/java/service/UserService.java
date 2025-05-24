@@ -77,9 +77,9 @@ public class UserService {
         try {
             if (authDAO.getAuthUser(logoutRequest.authToken()) != null) {
                 userFound = true;
-                String username = authDAO.getAuthUser(logoutRequest.authToken()).getUsername();
+                //String username = authDAO.getAuthUser(logoutRequest.authToken()).getUsername();
                 //userDAO.deleteUser(username);
-                authDAO.deleteAuthTokens(username);
+                authDAO.deleteAuthTokens(logoutRequest.authToken());
                 success = true;
             }
         }catch(DataAccessException exception){

@@ -16,7 +16,8 @@ public class MySqlUserDAO implements UserDAO{
     }
     @Override
     public void clear() throws DataAccessException {
-
+        var statement = "TRUNCATE user";
+        executeUpdate(statement);
     }
 
     @Override
@@ -42,13 +43,16 @@ public class MySqlUserDAO implements UserDAO{
         }catch(SQLException exception){
             throw new DataAccessException("Database access exception getUser");
         }
+        System.out.println("ALERT: getUser returning null.");
+        return null;
     }
 
     @Override
     public void deleteUser(String username) throws DataAccessException {
-
+        var statement = "DELETE FROM user WHERE username=?";
+        executeUpdate(statement, username);
     }
-    private int executeUpdate(String statement, Object... params) throws DataAccessException{
+    private void executeUpdate(String statement, Object... params) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
@@ -58,11 +62,6 @@ public class MySqlUserDAO implements UserDAO{
                 }
                 ps.executeUpdate();
 
-                var rs = ps.getGeneratedKeys();
-                if(rs.next()){
-                    return rs.getInt(1);
-                }
-                return 0;
             }
         }catch (SQLException exception) {
             throw new DataAccessException("execute update sql error");

@@ -11,8 +11,8 @@ import static java.sql.Types.NULL;
 
 public class MySqlUserDAO implements UserDAO{
     //see Petshop MySqlDataAccess.java example
-    public MySqlUserDAO() {
-
+    public MySqlUserDAO() throws DataAccessException {
+        configureDatabase();
     }
     @Override
     public void clear() throws DataAccessException {
@@ -21,12 +21,27 @@ public class MySqlUserDAO implements UserDAO{
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-
+        var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?)";
+        var json = new Gson().toJson(user);
+        executeUpdate(statement, user.getUsername(), user.getPasswd(), user.getEmail(), json);
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        try(var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT json FROM user WHERE username=?";
+            try(var ps = conn.prepareStatement(statement)){
+                ps.setString(1, username);
+                try(var rs = ps.executeQuery()){
+                    if(rs.next()){
+                        var userJson = rs.getString("json");
+                        return new Gson().fromJson(userJson, UserData.class);
+                    }
+                }
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Database access exception getUser");
+        }
     }
 
     @Override
@@ -56,25 +71,25 @@ public class MySqlUserDAO implements UserDAO{
     private final String[] createStatements = {
         """
         CREATE TABLE IF NOT EXISTS user (
-        'username' varchar(256) NOT NULL,
-        'password' varchar(256) NOT NULL,
-        'email' varchar(256) NOT NULL,
-        'json' TEXT DEFAULT NULL,
-        PRIMARY KEY ('username'),
-        INDEX('username')
+        "username" varchar(256) NOT NULL,
+        "password" varchar(256) NOT NULL,
+        "email" varchar(256) NOT NULL,
+        "json" TEXT DEFAULT NULL,
+        PRIMARY KEY ("username"),
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
         """
     };
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
-        var conn = DatabaseManager.getConnection();
-        for (var statement : createStatements) {
-            try(var preparedStatement = conn.prepareStatement(statement)){
-                preparedStatement.executeUpdate();
-            }catch(SQLException ex){
-                throw new DataAccessException("Unable to configure database");
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
             }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to configure database");
         }
     }
 }

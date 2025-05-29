@@ -40,7 +40,7 @@ public class MySqlGameDAO implements GameDAO {
                     if(rs.next()){
                         gameID = rs.getInt(1);
                     }else{
-                        System.out.println("createGame id gen error");
+                        System.out.println("createGame id does not return key");
                     }
                 }
             }
@@ -54,7 +54,7 @@ public class MySqlGameDAO implements GameDAO {
                 ps.executeUpdate();
             }
         }catch(SQLException exception){
-            throw new DataAccessException("Database access exception createGame", exception);
+            throw new DataAccessException("Error: Database access exception createGame", exception);
         }
         return gameID;
     }
@@ -79,7 +79,7 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
         }catch(SQLException exception){
-            throw new DataAccessException("Database access exception getGame");
+            throw new DataAccessException("Error: Database access exception getGame");
         }
         System.out.println("ALERT: getGame returning null.");
         return null;
@@ -108,7 +108,7 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
         }catch(SQLException exception){
-            throw new DataAccessException("problem in listGames");
+            throw new DataAccessException("Error: problem in listGames");
         }
         return gameList;
     }
@@ -128,7 +128,7 @@ public class MySqlGameDAO implements GameDAO {
 
             }
         }catch (SQLException exception) {
-            throw new DataAccessException("execute update sql error", exception);
+            throw new DataAccessException("Error: execute update sql doesn't work. Likely cause in calling function", exception);
         }
     }
 
@@ -153,7 +153,7 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Unable to configure database");
+            throw new DataAccessException("Error: Unable to configure database");
         }
     }
 }

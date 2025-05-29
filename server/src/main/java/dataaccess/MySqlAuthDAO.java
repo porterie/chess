@@ -15,7 +15,7 @@ public class MySqlAuthDAO implements AuthDAO {
         try {
             configureDatabase();
         } catch (DataAccessException exception) {
-            throw new RuntimeException(" MySqlAuthDAO init problem", exception);
+            throw new RuntimeException("ERROR: MySqlAuthDAO init problem", exception);
         }
     }
 
@@ -33,7 +33,7 @@ public class MySqlAuthDAO implements AuthDAO {
                 }
             }
         }catch(SQLException exception){
-            throw new DataAccessException("Database access exception getAuthTokens");
+            throw new DataAccessException("Error: Database access exception getAuthTokens");
         }
         System.out.println("ALERT: getAuthTokens returning null.");
         return null;
@@ -47,10 +47,11 @@ public class MySqlAuthDAO implements AuthDAO {
 
     @Override
     public void createAuthTokens(String authToken, String username) throws DataAccessException {
-        var statement = "REPLACE INTO authentication (authToken, username, json) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO authentication (authToken, username, json) VALUES (?, ?, ?)";
         AuthData authData = new AuthData(authToken, username);
         var json = new Gson().toJson(authData);
         executeUpdate(statement, authToken, username, json);
+        System.out.println("Creating authToken: " + authToken + " for user: " + username);
         //todo PASSWORD hashing
     }
 
@@ -68,7 +69,7 @@ public class MySqlAuthDAO implements AuthDAO {
                 }
             }
         }catch(SQLException exception){
-            throw new DataAccessException("Database access exception getAuthUser");
+            throw new DataAccessException("Error: Database access exception getAuthUser");
         }
         System.out.println("ALERT: getAuthUser returning null.");
         return null;
@@ -79,8 +80,7 @@ public class MySqlAuthDAO implements AuthDAO {
         try {
             return getAuthUser(authToken) != null;
         }catch(DataAccessException exception){
-            System.out.println("ERROR: data access exception in isAuthToken");
-            return false;
+            throw new RuntimeException("Error: isAuthToken failure");
         }
     }
     public void clear(){
@@ -120,7 +120,7 @@ public class MySqlAuthDAO implements AuthDAO {
             }
         }catch (SQLException exception) {
             exception.printStackTrace();
-            throw new DataAccessException("execute update sql error", exception);
+            throw new DataAccessException("Error: execute update sql, likely cause in calling function", exception);
         }
     }
 
@@ -130,8 +130,7 @@ public class MySqlAuthDAO implements AuthDAO {
         authToken varchar(256) NOT NULL,
         username varchar(256) NOT NULL,
         json TEXT DEFAULT NULL,
-        PRIMARY KEY (authToken),
-        INDEX(authToken)
+        PRIMARY KEY (authToken)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
         """
     };
@@ -144,7 +143,7 @@ public class MySqlAuthDAO implements AuthDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Unable to configure database");
+            throw new DataAccessException("Error: Unable to configure database");
         }
     }
 }

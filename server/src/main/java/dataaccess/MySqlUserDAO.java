@@ -45,7 +45,7 @@ public class MySqlUserDAO implements UserDAO{
                 }
             }
         }catch(SQLException exception){
-            throw new DataAccessException("Database access exception getUser");
+            throw new DataAccessException("Error: Database access exception getUser");
         }
         System.out.println("ALERT: getUser returning null.");
         return null;
@@ -70,7 +70,7 @@ public class MySqlUserDAO implements UserDAO{
 
             }
         }catch (SQLException exception) {
-            throw new DataAccessException("execute update sql error", exception);
+            throw new DataAccessException("Error: execute update sql. Likely cause in calling function", exception);
         }
     }
     private final String[] createStatements = {
@@ -94,7 +94,7 @@ public class MySqlUserDAO implements UserDAO{
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Unable to configure database");
+            throw new DataAccessException("Error: Unable to configure database");
         }
     }
 }

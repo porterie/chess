@@ -158,7 +158,7 @@ public class Handler {
 
         }catch(DataAccessException exception){
             response.status(500);
-            return "{ \"message\": \"Database problem\" }";
+            return "{ \"message\": \"Error: Database problem\" }";
         }
     }
 
@@ -170,7 +170,7 @@ public class Handler {
             return "{}";
         }catch(DataAccessException exception){
             response.status(500);
-            return "{ \"message\": \"Database problem\" }";
+            return "{ \"message\": \"Error: Database problem\" }";
         }
     }
 }

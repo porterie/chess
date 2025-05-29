@@ -47,7 +47,7 @@ public class UserService {
                 result = new RegisterResult(null, null);
             }
         }catch(DataAccessException exception){
-            System.out.println("ERROR: DATA ACCESS EXCEPTION");
+            System.out.println("DATA ACCESS EXCEPTION");
         }
          if(registerRequest.username()==null || registerRequest.password()==null || registerRequest.email()==null){
              result = null;

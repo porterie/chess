@@ -7,14 +7,21 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
-    private UserDAO userDAO = new MemoryUserDAO();
-    private AuthDAO authDAO = new MemoryAuthDAO();
+    private UserDAO userDAO;
+    {
+        try {
+            userDAO = new MySqlUserDAO();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private AuthDAO authDAO = new MySqlAuthDAO();
     public Boolean authenticationValid(String authToken) throws DataAccessException {
         return authDAO.isAuthToken(authToken);
     }
     public void clearMemory() throws DataAccessException {
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
+        userDAO.clear();
+        authDAO.clear();
     }
     public String getUser(String auth) throws DataAccessException {
         //gets username from auth token

@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.MemoryGameDAO;
+import dataaccess.MySqlGameDAO;
 import dataaccess.AuthDAO;
 import model.GameData;
 
@@ -11,7 +12,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 public class GameService {
-    private GameDAO gameDAO = new MemoryGameDAO();
+    private GameDAO gameDAO = new MySqlGameDAO();
     public Boolean whiteFree(Integer gameID) throws DataAccessException {
         return Objects.equals(gameDAO.getGame(gameID).getWhiteUsername(), null);
     }
@@ -19,7 +20,7 @@ public class GameService {
         return Objects.equals(gameDAO.getGame(gameID).getBlackUsername(), null);
     }
     public void clearMemory() throws DataAccessException{
-        gameDAO = new MemoryGameDAO();
+        gameDAO.clear();
     }
     public String listGames() throws DataAccessException {
        //Constructs the JSON list of games

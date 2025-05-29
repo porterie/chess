@@ -22,7 +22,7 @@ public class MySqlGameDAO implements GameDAO {
         //game with only name to create id
         var statement = "INSERT INTO game (gameName) VALUES (?)";
         executeUpdate(statement, gameName);
-        int gameID = -1; //init to inviable ID. Should change
+        int gameID = -1; //init to inviable ID. Should change later in function if works
         try(var conn = DatabaseManager.getConnection()){
             var statement2 = "SELECT gameID FROM game WHERE gameName=?";
             try(var ps = conn.prepareStatement(statement)){

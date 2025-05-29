@@ -74,6 +74,14 @@ public class MySqlAuthDAO implements AuthDAO {
             return false;
         }
     }
+    public void clear(){
+        var statement = "TRUNCATE authentication";
+        try {
+            executeUpdate(statement);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void executeUpdate(String statement, Object... params) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()) {

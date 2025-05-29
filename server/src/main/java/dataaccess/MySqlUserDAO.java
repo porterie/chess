@@ -10,6 +10,9 @@ import static java.sql.Types.NULL;
 
 
 public class MySqlUserDAO implements UserDAO{
+
+
+
     //see Petshop MySqlDataAccess.java example
     public MySqlUserDAO() throws DataAccessException {
         configureDatabase();
@@ -22,7 +25,7 @@ public class MySqlUserDAO implements UserDAO{
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-        var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
         var json = new Gson().toJson(user);
         executeUpdate(statement, user.getUsername(), user.getPasswd(), user.getEmail(), json);
         //TODO: password hashing
@@ -59,13 +62,15 @@ public class MySqlUserDAO implements UserDAO{
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
                     if (param instanceof String p) {ps.setString(i + 1, p);}
-                    else if(param == null){ps.setNull(i+1, NULL);}
+                    else if(param instanceof Integer p) {ps.setInt(i+1, p);}
+                    else if(param instanceof Boolean p) {ps.setBoolean(i+1, p);}
+                    else if(param == null){ps.setNull(i+1, java.sql.Types.NULL);}
                 }
                 ps.executeUpdate();
 
             }
         }catch (SQLException exception) {
-            throw new DataAccessException("execute update sql error");
+            throw new DataAccessException("execute update sql error", exception);
         }
     }
     private final String[] createStatements = {

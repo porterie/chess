@@ -10,6 +10,15 @@ import java.sql.Statement;
 import static java.sql.Types.NULL;
 
 public class MySqlAuthDAO implements AuthDAO {
+
+    public MySqlAuthDAO() {
+        try {
+            configureDatabase();
+        } catch (DataAccessException exception) {
+            throw new RuntimeException(" MySqlAuthDAO init problem", exception);
+        }
+    }
+
     @Override
     public AuthData getAuthTokens(String username) throws DataAccessException {
         try(var conn = DatabaseManager.getConnection()){
@@ -38,7 +47,7 @@ public class MySqlAuthDAO implements AuthDAO {
 
     @Override
     public void createAuthTokens(String authToken, String username) throws DataAccessException {
-        var statement = "INSERT INTO authentication (authToken, password, json) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO authentication (authToken, username, json) VALUES (?, ?, ?)";
         AuthData authData = new AuthData(authToken, username);
         var json = new Gson().toJson(authData);
         executeUpdate(statement, authToken, username, json);
@@ -78,24 +87,40 @@ public class MySqlAuthDAO implements AuthDAO {
         var statement = "TRUNCATE authentication";
         try {
             executeUpdate(statement);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            throw new RuntimeException(exception);
         }
     }
 
     private void executeUpdate(String statement, Object... params) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String p) {ps.setString(i + 1, p);}
-                    else if(param == null){ps.setNull(i+1, NULL);}
+            if(params.length==0){
+                try(var clearStatement = conn.createStatement()){
+                    System.out.println("Authentication clear");
+                    clearStatement.executeUpdate(statement);
                 }
-                ps.executeUpdate();
+            }else {
+                try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        if (param instanceof String p) {
+                            ps.setString(i + 1, p);
+                        } else if (param instanceof Integer p) {
+                            ps.setInt(i + 1, p);
+                        } else if (param instanceof Boolean p) {
+                            ps.setBoolean(i + 1, p);
+                        } else if (param == null) {
+                            ps.setNull(i + 1, java.sql.Types.NULL);
+                        }
+                    }
+                    ps.executeUpdate();
 
+                }
             }
         }catch (SQLException exception) {
-            throw new DataAccessException("execute update sql error");
+            exception.printStackTrace();
+            throw new DataAccessException("execute update sql error", exception);
         }
     }
 

@@ -17,6 +17,14 @@ import static java.sql.Types.NULL;
 
 public class MySqlGameDAO implements GameDAO {
 
+    public MySqlGameDAO() {
+        try {
+            configureDatabase();
+        } catch (DataAccessException exception) {
+            throw new RuntimeException(" MySqlGameDAO init problem", exception);
+        }
+    }
+
     @Override
     public Integer createGame(String gameName) throws DataAccessException {
         //game with only name to create id
@@ -25,7 +33,7 @@ public class MySqlGameDAO implements GameDAO {
         int gameID = -1; //init to inviable ID. Should change later in function if works
         try(var conn = DatabaseManager.getConnection()){
             var statement2 = "SELECT gameID FROM game WHERE gameName=?";
-            try(var ps = conn.prepareStatement(statement)){
+            try(var ps = conn.prepareStatement(statement2)){
                 ps.setString(1, gameName);
                 try(var rs = ps.executeQuery()){
                     if(rs.next()){
@@ -34,7 +42,7 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
         }catch(SQLException exception){
-            throw new DataAccessException("Database access exception createGame");
+            throw new DataAccessException("Database access exception createGame", exception);
         }
         //using ID add GameData
         GameData gameData = new GameData(gameID, null, null, gameName, new ChessGame());
@@ -42,7 +50,7 @@ public class MySqlGameDAO implements GameDAO {
         var statement2 = "UPDATE game SET json=? WHERE gameID=?";
         executeUpdate(statement2, json, gameID);
 
-        return 0;
+        return gameID;
     }
 
     @Override
@@ -106,13 +114,15 @@ public class MySqlGameDAO implements GameDAO {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
                     if (param instanceof String p) {ps.setString(i + 1, p);}
-                    else if(param == null){ps.setNull(i+1, NULL);}
+                    else if(param instanceof Integer p) {ps.setInt(i+1, p);}
+                    else if(param instanceof Boolean p) {ps.setBoolean(i+1, p);}
+                    else if(param == null){ps.setNull(i+1, java.sql.Types.NULL);}
                 }
                 ps.executeUpdate();
 
             }
         }catch (SQLException exception) {
-            throw new DataAccessException("execute update sql error");
+            throw new DataAccessException("execute update sql error", exception);
         }
     }
 

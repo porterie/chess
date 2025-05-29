@@ -40,14 +40,14 @@ public class MySqlAuthDAO implements AuthDAO {
     }
 
     @Override
-    public void deleteAuthTokens(String username) throws DataAccessException {
-        var statement = "DELETE FROM authentication WHERE username=?";
-        executeUpdate(statement, username);
+    public void deleteAuthTokens(String authToken) throws DataAccessException {
+        var statement = "DELETE FROM authentication WHERE authToken=?";
+        executeUpdate(statement, authToken);
     }
 
     @Override
     public void createAuthTokens(String authToken, String username) throws DataAccessException {
-        var statement = "INSERT INTO authentication (authToken, username, json) VALUES (?, ?, ?)";
+        var statement = "REPLACE INTO authentication (authToken, username, json) VALUES (?, ?, ?)";
         AuthData authData = new AuthData(authToken, username);
         var json = new Gson().toJson(authData);
         executeUpdate(statement, authToken, username, json);
@@ -130,7 +130,7 @@ public class MySqlAuthDAO implements AuthDAO {
         authToken varchar(256) NOT NULL,
         username varchar(256) NOT NULL,
         json TEXT DEFAULT NULL,
-        PRIMARY KEY (username),
+        PRIMARY KEY (authToken),
         INDEX(authToken)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
         """

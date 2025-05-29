@@ -29,27 +29,33 @@ public class MySqlGameDAO implements GameDAO {
     public Integer createGame(String gameName) throws DataAccessException {
         //game with only name to create id
         var statement = "INSERT INTO game (gameName) VALUES (?)";
-        executeUpdate(statement, gameName);
+
         int gameID = -1; //init to inviable ID. Should change later in function if works
         try(var conn = DatabaseManager.getConnection()){
-            var statement2 = "SELECT gameID FROM game WHERE gameName=?";
-            try(var ps = conn.prepareStatement(statement2)){
+            //var statement2 = "SELECT gameID FROM game WHERE gameName=?";
+            try(var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)){
                 ps.setString(1, gameName);
-                try(var rs = ps.executeQuery()){
+                ps.executeUpdate();
+                try(var rs = ps.getGeneratedKeys()){
                     if(rs.next()){
-                        gameID = rs.getInt("gameID");
+                        gameID = rs.getInt(1);
+                    }else{
+                        System.out.println("createGame id gen error");
                     }
                 }
+            }
+            //using ID add GameData
+            GameData gameData = new GameData(gameID, null, null, gameName, new ChessGame());
+            var json = new Gson().toJson(gameData);
+            var statement2 = "UPDATE game SET json=? WHERE gameID=?";
+            try(var ps = conn.prepareStatement(statement2)){
+                ps.setString(1, json);
+                ps.setInt(2, gameID);
+                ps.executeUpdate();
             }
         }catch(SQLException exception){
             throw new DataAccessException("Database access exception createGame", exception);
         }
-        //using ID add GameData
-        GameData gameData = new GameData(gameID, null, null, gameName, new ChessGame());
-        var json = new Gson().toJson(gameData);
-        var statement2 = "UPDATE game SET json=? WHERE gameID=?";
-        executeUpdate(statement2, json, gameID);
-
         return gameID;
     }
 

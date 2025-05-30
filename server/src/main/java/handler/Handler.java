@@ -26,7 +26,7 @@ public class Handler {
             return serializer.toJson(result);
         }else{
             response.status(500);
-            return "{ \"message\": \"Error: idk man.\" }";
+            return "{ \"message\": \"Error: Database error.\" }";
         }
     }
     public static Object loginHandler(Request request, Response response, UserService userService){

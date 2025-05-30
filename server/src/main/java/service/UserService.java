@@ -32,7 +32,7 @@ public class UserService {
         //generates a viable token. Does not add to database!
         return UUID.randomUUID().toString();
     }
-    public RegisterResult register(RegisterRequest registerRequest){
+    public RegisterResult register(RegisterRequest registerRequest) {
         RegisterResult result = null;
         try{
             if(userDAO.getUser(registerRequest.username())==null){//username free

@@ -8,6 +8,8 @@ import server.Server;
 import java.net.HttpURLConnection;
 import java.util.*;
 
+
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StandardAPITests {
 
@@ -65,6 +67,7 @@ public class StandardAPITests {
     @DisplayName("Normal User Login")
     public void loginSuccess() {
         TestAuthResult loginResult = serverFacade.login(existingUser);
+
 
         assertHttpOk(loginResult);
         Assertions.assertEquals(existingUser.getUsername(), loginResult.getUsername(),

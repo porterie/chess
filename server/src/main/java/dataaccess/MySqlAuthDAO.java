@@ -52,6 +52,7 @@ public class MySqlAuthDAO implements AuthDAO {
         var json = new Gson().toJson(authData);
         executeUpdate(statement, authToken, username, json);
         System.out.println("Creating authToken: " + authToken + " for user: " + username);
+        printAuthTableSchema();
         //todo PASSWORD hashing
     }
 
@@ -135,8 +136,16 @@ public class MySqlAuthDAO implements AuthDAO {
         """
     };
     private void configureDatabase() throws DataAccessException {
+
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
+             /*
+            try (var dropStmt = conn.createStatement()) {
+                dropStmt.executeUpdate("DROP TABLE IF EXISTS authentication");
+                System.out.println("Authentication table dropped and will be recreated.");
+            }*/
+            //code above resets database schema. remove before submission
+
             for (var statement : createStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
@@ -146,4 +155,22 @@ public class MySqlAuthDAO implements AuthDAO {
             throw new DataAccessException("Error: Unable to configure database");
         }
     }
+
+    public void printAuthTableSchema() {
+        try (var conn = DatabaseManager.getConnection();
+             var stmt = conn.prepareStatement("SHOW CREATE TABLE authentication");
+             var rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                String tableName = rs.getString(1);
+                String createSQL = rs.getString(2);
+                System.out.println("Table: " + tableName);
+                System.out.println(createSQL);
+            }
+
+        } catch (SQLException | DataAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

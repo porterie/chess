@@ -6,7 +6,6 @@ import model.UserData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static java.sql.Types.NULL;
 
 
 public class MySqlUserDAO implements UserDAO{

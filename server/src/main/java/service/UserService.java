@@ -35,7 +35,6 @@ public class UserService {
     }
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException{
         RegisterResult result = null;
-        /*try{*/
         if(registerRequest.username()==null || registerRequest.password()==null || registerRequest.email()==null){
             return result;
         }
@@ -51,9 +50,6 @@ public class UserService {
             }else{//username taken
                 result = new RegisterResult(null, null);
             }
-        //}catch(DataAccessException exception){
-         /*   System.out.println("DATA ACCESS EXCEPTION");
-        }*/
 
         return result;
     }

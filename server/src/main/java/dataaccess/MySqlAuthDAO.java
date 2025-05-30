@@ -135,12 +135,6 @@ public class MySqlAuthDAO implements AuthDAO {
 
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
-             /*
-            try (var dropStmt = conn.createStatement()) {
-                dropStmt.executeUpdate("DROP TABLE IF EXISTS authentication");
-                System.out.println("Authentication table dropped and will be recreated.");
-            }*/
-            //code above resets database schema. remove before submission
 
             for (var statement : createStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {

@@ -92,7 +92,6 @@ public class Handler {
         try {
             if (userService.authenticationValid(authToken)) {
                 response.status(200);
-                //System.out.print(gameService.listGames());
                 return gameService.listGames();
             } else {
                 response.status(401);
@@ -135,29 +134,7 @@ public class Handler {
         response.type("application/json");
         try {
             JoinGameRequest joinGameRequest = serializer.fromJson(request.body(), JoinGameRequest.class);
-            /*if(!gameService.validGame(joinGameRequest.gameID()) ||
-                    !((Objects.equals(joinGameRequest.playerColor(), "WHITE")) || Objects.equals(joinGameRequest.playerColor(), "BLACK"))){
-                response.status(400);
-                return "{ \"message\": \"Error: bad request\" }";
-            }else if(Objects.equals(joinGameRequest.playerColor(), "WHITE") && !gameService.whiteFree(joinGameRequest.gameID())){
-                response.status(403);
-                return "{ \"message\": \"Error: already taken\" }";
-            }else if(Objects.equals(joinGameRequest.playerColor(), "BLACK") && !gameService.blackFree(joinGameRequest.gameID())){
-                response.status(403);
-                return "{ \"message\": \"Error: already taken\" }";
-            }else if(userService.authenticationValid(authToken)) {
-                String playerName = userService.getUser(authToken);
-                gameService.joinGame(joinGameRequest.playerColor(), joinGameRequest.gameID(), playerName);
-                response.status(200);
-                return"{}";
-            }else{
-                response.status(401);
-                System.out.println("Joingame final condition");
-                System.out.print(authToken);
-                System.out.println(joinGameRequest.gameID());
-                System.out.println(joinGameRequest.playerColor());
-                return "{ \"message\": \"Error: unauthorized\" }";
-            }*/
+
             boolean validAuth = userService.authenticationValid(authToken);
             boolean colorWhite = (Objects.equals(joinGameRequest.playerColor(), "WHITE"));
             boolean colorBlack = (Objects.equals(joinGameRequest.playerColor(), "BLACK"));

@@ -77,12 +77,8 @@ public class MySqlAuthDAO implements AuthDAO {
     }
 
     @Override
-    public Boolean isAuthToken(String authToken) {
-        try {
-            return getAuthUser(authToken) != null;
-        }catch(DataAccessException exception){
-            throw new RuntimeException("Error: isAuthToken failure");
-        }
+    public Boolean isAuthToken(String authToken) throws DataAccessException {
+        return getAuthUser(authToken) != null;
     }
     public void clear(){
         var statement = "TRUNCATE authentication";

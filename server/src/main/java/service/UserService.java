@@ -2,6 +2,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -32,12 +33,16 @@ public class UserService {
         //generates a viable token. Does not add to database!
         return UUID.randomUUID().toString();
     }
-    public RegisterResult register(RegisterRequest registerRequest) {
+    public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException{
         RegisterResult result = null;
-        try{
+        /*try{*/
+        if(registerRequest.username()==null || registerRequest.password()==null || registerRequest.email()==null){
+            return result;
+        }
             if(userDAO.getUser(registerRequest.username())==null){//username free
+                String hashPass = BCrypt.hashpw(registerRequest.password(), BCrypt.gensalt());
                 userDAO.createUser(new UserData(registerRequest.username(),
-                        registerRequest.email(), registerRequest.password()));
+                        registerRequest.email(), hashPass));
                 System.out.println("Registered user with password: ");
                 System.out.println(registerRequest.password());
                 String newUsrToken = generateToken();
@@ -46,20 +51,18 @@ public class UserService {
             }else{//username taken
                 result = new RegisterResult(null, null);
             }
-        }catch(DataAccessException exception){
-            System.out.println("DATA ACCESS EXCEPTION");
-        }
-         if(registerRequest.username()==null || registerRequest.password()==null || registerRequest.email()==null){
-             result = null;
-         }
+        //}catch(DataAccessException exception){
+         /*   System.out.println("DATA ACCESS EXCEPTION");
+        }*/
+
         return result;
     }
-    public LoginResult login(LoginRequest loginRequest) {
+    public LoginResult login(LoginRequest loginRequest) throws DataAccessException{
         LoginResult loginResult = null;
-        try{
             UserData user = userDAO.getUser(loginRequest.username());
+            String hashPass = BCrypt.hashpw(loginRequest.password(), BCrypt.gensalt());
             if(user!=null){
-                if(Objects.equals(user.getPasswd(), loginRequest.password())){
+                if(BCrypt.checkpw(loginRequest.password(), user.getPasswd())){
                         //successful login
                         String loginToken = generateToken();
                         loginResult = new LoginResult(user.getUsername(), loginToken);
@@ -72,26 +75,23 @@ public class UserService {
             }else{
                 loginResult = new LoginResult(null, null);
             }
-        }catch(DataAccessException exception){
-            loginResult = null;
-            System.out.println(("data access exception"));
-        }
+
+
         return loginResult;
     }
-    public LogoutResult logout(LogoutRequest logoutRequest){
+    public LogoutResult logout(LogoutRequest logoutRequest) throws DataAccessException{
         Boolean userFound = false;
         Boolean success = false;
-        try {
+
             if (authDAO.getAuthUser(logoutRequest.authToken()) != null) {
                 userFound = true;
-                //String username = authDAO.getAuthUser(logoutRequest.authToken()).getUsername();
-                //userDAO.deleteUser(username);
                 authDAO.deleteAuthTokens(logoutRequest.authToken());
                 success = true;
             }
-        }catch(DataAccessException exception){
+
             System.out.println("Data access exception");
-        }
+
         return new LogoutResult(userFound, success);
     }
+
 }

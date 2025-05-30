@@ -19,21 +19,21 @@ public class MyUnitTests {
     @Test
     @Order(1)
     @DisplayName("Register User")
-    public void registerTestPositive() {
+    public void registerTestPositive() throws DataAccessException {
         RegisterResult result = userService.register(new RegisterRequest("user name", "password", "email@email.com"));
         Assertions.assertEquals("user name", result.username(), "Registers new user");
     }
 
     @Test
     @Order(2)
-    public void registerTestNegative(){
+    public void registerTestNegative() throws DataAccessException {
         RegisterResult result = userService.register(new RegisterRequest(null, "pass", null));
         Assertions.assertNull(result, "Tests service will not allow null fields for registry");
     }
 
     @Test
     @Order(3)
-    public void loginTestPos(){
+    public void loginTestPos() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult result = userService.login(new LoginRequest("username", "password"));
         Assertions.assertNotNull(result.authToken(), "logs in user with token");
@@ -41,7 +41,7 @@ public class MyUnitTests {
 
     @Test
     @Order(4)
-    public void loginTestNeg(){
+    public void loginTestNeg() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult result = userService.login(new LoginRequest("username", "wrongpassword"));
         Assertions.assertNull(result.authToken(), "rejects login attempt");
@@ -49,7 +49,7 @@ public class MyUnitTests {
 
     @Test
     @Order(5)
-    public void logoutTestPos(){
+    public void logoutTestPos() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         LogoutResult result = userService.logout(new LogoutRequest(loginResult.authToken()));
@@ -58,7 +58,7 @@ public class MyUnitTests {
 
     @Test
     @Order(6)
-    public void logoutTestNeg(){
+    public void logoutTestNeg() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         LogoutResult result = userService.logout(new LogoutRequest("bad token"));
@@ -67,7 +67,7 @@ public class MyUnitTests {
 
     @Test
     @Order(7)
-    public void createGameTestPos(){
+    public void createGameTestPos() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         CreateGameResult result = null;
@@ -81,7 +81,7 @@ public class MyUnitTests {
 
     @Test
     @Order(8)
-    public void createGameTestNeg(){
+    public void createGameTestNeg() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         CreateGameResult result = null;
@@ -95,7 +95,7 @@ public class MyUnitTests {
 
     @Test
     @Order(9)
-    public void joinGameTestPos(){
+    public void joinGameTestPos() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         CreateGameResult createResult = null;
@@ -111,7 +111,7 @@ public class MyUnitTests {
     }
     @Test
     @Order(10)
-    public void joinGameTestNeg(){
+    public void joinGameTestNeg() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         CreateGameResult createResult = null;
@@ -128,7 +128,7 @@ public class MyUnitTests {
 
     @Test
     @Order(11)
-    public void listGameTestPos(){
+    public void listGameTestPos() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         CreateGameResult createResult = null;
@@ -145,7 +145,7 @@ public class MyUnitTests {
 
     @Test
     @Order(12)
-    public void listGameTestNeg(){
+    public void listGameTestNeg() throws DataAccessException {
         RegisterResult registerResult = userService.register(new RegisterRequest("username", "password", "email@email.com"));
         LoginResult loginResult = userService.login(new LoginRequest("username", "password"));
         CreateGameResult createResult = null;

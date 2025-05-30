@@ -27,7 +27,6 @@ public class MySqlUserDAO implements UserDAO{
         var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
         var json = new Gson().toJson(user);
         executeUpdate(statement, user.getUsername(), user.getPasswd(), user.getEmail(), json);
-        //TODO: password hashing
     }
 
     @Override

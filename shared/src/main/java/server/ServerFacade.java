@@ -21,6 +21,11 @@ public class ServerFacade {
     }
 
     //implement all possible http requests.
+    public boolean register(String username, String password, String email){
+        //todo: implement
+        var path = "/";
+        return false;
+    }
 
 // following methods based on petshop equivalent ServerFacade class
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {

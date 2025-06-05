@@ -13,12 +13,16 @@ import java.util.Scanner;
 public class PreLoginClient {
     private final String serverUrl;
     private final ServerFacade server;
+    private LoginState state = LoginState.SIGNEDOUT; //
     Gson gson = new Gson();
-    public PreLoginClient(String serverUrl){
+    public PreLoginClient(String serverUrl, ServerFacade server){
         this.serverUrl = serverUrl;
-        server = new ServerFacade(serverUrl);
-
+        this.server = server;
     }
+    public LoginState getLoginState(){
+        return state;
+    }
+
 
     public String eval(String input) {
         try {
@@ -40,6 +44,7 @@ public class PreLoginClient {
         //failed http will throw the response exception
         if(params.length==3){
             RegisterResult response = server.register(params[0], params[1], params[2]);
+            state=LoginState.SIGNEDIN;
             return String.format("Registered user %s", params[0]);
         }else{
             throw new ResponseException(400, "Expected: <username> <password> <email>");
@@ -49,6 +54,7 @@ public class PreLoginClient {
     public String login(String... params) throws ResponseException {
         if(params.length==2){
             LoginResult response = server.login(params[0], params[1]);
+            state=LoginState.SIGNEDIN;
             return String.format("Logged in user %s", params[0]);
         }else{
             throw new ResponseException(400, "Expected: <username> <password>");

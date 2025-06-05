@@ -4,13 +4,8 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.*;
-import java.util.Collection;
 
-import com.google.gson.JsonObject;
 import exception.ResponseException;
-import model.GameData;
-import model.AuthData;
-import model.UserData;
 
 
 
@@ -24,7 +19,9 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-
+    public String getAuthToken(){
+        return authToken;
+    }
     //implement all possible http requests.
     public RegisterResult register(String username, String password, String email) throws ResponseException {
         //should return authToken?

@@ -2,6 +2,7 @@ package ui;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import org.glassfish.grizzly.http.server.Response;
 import server.*;
 
 import java.util.Arrays;
@@ -15,6 +16,10 @@ public class LoggedInClient {
         this.serverUrl = serverUrl;
         this.server = server;
         state = LoginState.SIGNEDIN;
+    }
+
+    public LoginState getLoginState(){
+        return state;
     }
 
     public String eval(String input) {
@@ -60,6 +65,16 @@ public class LoggedInClient {
             list.append(gson.toJson(game)).append('\n');
         }
         return list.toString();
+    }
+
+    public String playGame(String... params) throws ResponseException {
+        //TODO: remains to be implemented. For phase 5 do basic display
+        return "Not implemented";
+    }
+
+    public String observeGame(String... params) throws ResponseException {
+        //TODO: remains to be implemented. For phase 5 do basic display
+        return "Not implemented";
     }
 
     public String help() {

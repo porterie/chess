@@ -2,15 +2,13 @@ package model;
 
 import chess.ChessGame;
 
-import java.util.Objects;
-
 public class GameData {
     int gameID;
     String whiteUsername;
     String blackUsername;
     String gameName;
     ChessGame game;
-    public GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){
+    public GameData(Integer gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){
         this.gameID = gameID;
         this.game = game;
         this.whiteUsername = whiteUsername;

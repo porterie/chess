@@ -24,19 +24,20 @@ public class ServerFacade {
         serverUrl = url;
     }
 
+
     //implement all possible http requests.
     public String register(String username, String password, String email) throws ResponseException {
         //should return authToken?
         var path = "/user";
-        UserData user = new UserData(username, email, password);
-        JsonObject registerResult = this.makeRequest("POST", path, user, JsonObject.class, null);
+        RegisterRequest registerRequest = new RegisterRequest(username, password, email);
+        JsonObject registerResult = this.makeRequest("POST", path, registerRequest, JsonObject.class, null);
         return registerResult.get("authToken").getAsString(); //returns authtoken
     }
 
     public String login(String username, String password) throws ResponseException {
         var path = "/session";
-        UserData user = new UserData(username, null, password);
-        JsonObject loginResult = this.makeRequest("POST", path, user, JsonObject.class, null);
+        LoginRequest loginRequest = new LoginRequest(username, password);
+        JsonObject loginResult = this.makeRequest("POST", path, loginRequest, JsonObject.class, null);
         return loginResult.get("authToken").getAsString();
     }
 
@@ -45,10 +46,15 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null, authToken);
     }
 
-    public GameData createGame(String gameName){
+    public String createGame(String gameName) throws ResponseException {
         var path = "/game";
-        GameData newGame = new GameData(null, null, null, gameName, null);
-        JsonObject createGameResult = this.makeRequest("POST", path, newGame, )
+        CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
+        CreateGameResult createGameResult = this.makeRequest("POST", path, createGameRequest, JsonObject.class, authToken);
+    }
+
+    public GameData joinGame(String playerColor, Integer gameID){
+        var path = "/game";
+
     }
 
 // following methods based on petshop equivalent ServerFacade class

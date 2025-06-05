@@ -1,5 +1,6 @@
 package ui;
 
+import com.google.gson.Gson;
 import exception.ResponseException;
 import model.UserData;
 import server.ServerFacade;
@@ -11,6 +12,7 @@ public class PreLoginClient {
     private final String serverUrl;
     private final ServerFacade server;
     private LoginState state = LoginState.SIGNEDOUT;
+    Gson gson = new Gson();
     public PreLoginClient(String serverUrl){
         this.serverUrl = serverUrl;
         server = new ServerFacade(serverUrl);
@@ -35,7 +37,8 @@ public class PreLoginClient {
 
     public String register(String... params) throws ResponseException {
         if(params.length==3){
-            return server.register(params[0], params[1], params[2]); //returns authToken
+            Object response = server.register(params[0], params[1], params[2]);
+            if()
         }else{
             throw new ResponseException(500, "Error: invalid inputs for registration");
         }
@@ -43,6 +46,7 @@ public class PreLoginClient {
 
     public String login(String... params) throws ResponseException {
         if(params.length==2){
+
             return server.login(params[0], params[1]);
         }else{
             throw new ResponseException(500, "Error: invalid login inputs");

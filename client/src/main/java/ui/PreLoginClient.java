@@ -3,6 +3,8 @@ package ui;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.UserData;
+import server.LoginResult;
+import server.RegisterResult;
 import server.ServerFacade;
 
 import java.util.Arrays;
@@ -36,20 +38,23 @@ public class PreLoginClient {
     }
 
     public String register(String... params) throws ResponseException {
+        //failed http will throw the response exception
         if(params.length==3){
-            Object response = server.register(params[0], params[1], params[2]);
-            if()
+            RegisterResult response = server.register(params[0], params[1], params[2]);
+            state=LoginState.SIGNEDIN;
+            return String.format("Registered user %s", params[0]);
         }else{
-            throw new ResponseException(500, "Error: invalid inputs for registration");
+            throw new ResponseException(400, "Expected: <username> <password> <email>");
         }
     }
 
-    public String login(String... params) throws ResponseException {
+    public Object login(String... params) throws ResponseException {
         if(params.length==2){
-
-            return server.login(params[0], params[1]);
+            LoginResult response = server.login(params[0], params[1]);
+            state=LoginState.SIGNEDIN;
+            return String.format("Logged in user %s", params[0]);
         }else{
-            throw new ResponseException(500, "Error: invalid login inputs");
+            throw new ResponseException(400, "Expected: <username> <password>");
         }
 
     }

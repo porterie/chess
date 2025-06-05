@@ -26,19 +26,21 @@ public class ServerFacade {
 
 
     //implement all possible http requests.
-    public String register(String username, String password, String email) throws ResponseException {
+    public RegisterResult register(String username, String password, String email) throws ResponseException {
         //should return authToken?
         var path = "/user";
         RegisterRequest registerRequest = new RegisterRequest(username, password, email);
-        JsonObject registerResult = this.makeRequest("POST", path, registerRequest, JsonObject.class, null);
-        return registerResult.get("authToken").getAsString(); //returns authtoken
+        RegisterResult registerResult = this.makeRequest("POST", path, registerRequest, RegisterResult.class, null);
+        authToken = registerResult.authToken();
+        return registerResult; //returns authtoken
     }
 
-    public String login(String username, String password) throws ResponseException {
+    public LoginResult login(String username, String password) throws ResponseException {
         var path = "/session";
         LoginRequest loginRequest = new LoginRequest(username, password);
-        JsonObject loginResult = this.makeRequest("POST", path, loginRequest, JsonObject.class, null);
-        return loginResult.get("authToken").getAsString();
+        LoginResult loginResult = this.makeRequest("POST", path, loginRequest, LoginResult.class, null);
+        authToken = loginResult.authToken();
+        return loginResult;
     }
 
     public void logout(String authToken) throws ResponseException {
@@ -46,16 +48,24 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null, authToken);
     }
 
-    public String createGame(String gameName) throws ResponseException {
+    public CreateGameResult createGame(String gameName) throws ResponseException {
         var path = "/game";
         CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
-        CreateGameResult createGameResult = this.makeRequest("POST", path, createGameRequest, JsonObject.class, authToken);
+        return this.makeRequest("POST", path, createGameRequest, CreateGameResult.class, authToken);
     }
 
-    public GameData joinGame(String playerColor, Integer gameID){
+    public void joinGame(String playerColor, Integer gameID) throws ResponseException {
         var path = "/game";
-
+        JoinGameRequest joinGameRequest = new JoinGameRequest(gameID, playerColor);
+        this.makeRequest("PUT", path, joinGameRequest, null, authToken);
     }
+
+    public ListGamesResult listGames() throws ResponseException {
+        var path = "/game";
+        return this.makeRequest("GET", path, null, ListGamesResult.class, authToken);
+    }
+
+
 
 // following methods based on petshop equivalent ServerFacade class
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws ResponseException {

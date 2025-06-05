@@ -35,15 +35,19 @@ public class PreLoginClient {
 
     public String register(String... params) throws ResponseException {
         if(params.length==3){
-            boolean registerResult = server.register(params[0], params[1], params[2]);
-            if(registerResult){
-                return "positive register";
-            }else{
-                return "negative register";
-            }
+            return server.register(params[0], params[1], params[2]); //returns authToken
         }else{
             throw new ResponseException(500, "Error: invalid inputs for registration");
         }
+    }
+
+    public String login(String... params) throws ResponseException {
+        if(params.length==2){
+            return server.login(params[0], params[1]);
+        }else{
+            throw new ResponseException(500, "Error: invalid login inputs");
+        }
+
     }
 
 }

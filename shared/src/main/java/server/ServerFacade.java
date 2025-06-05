@@ -4,37 +4,66 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.*;
+import java.util.Collection;
 
+import com.google.gson.JsonObject;
 import exception.ResponseException;
 import model.GameData;
 import model.AuthData;
 import model.UserData;
 
 
+
 public class ServerFacade {
     //based on petshop implementation
 
     private final String serverUrl;
+    private String authToken;
 
     public ServerFacade(String url) {
         serverUrl = url;
     }
 
     //implement all possible http requests.
-    public boolean register(String username, String password, String email){
-        //todo: implement
-        var path = "/";
-        return false;
+    public String register(String username, String password, String email) throws ResponseException {
+        //should return authToken?
+        var path = "/user";
+        UserData user = new UserData(username, email, password);
+        JsonObject registerResult = this.makeRequest("POST", path, user, JsonObject.class, null);
+        return registerResult.get("authToken").getAsString(); //returns authtoken
+    }
+
+    public String login(String username, String password) throws ResponseException {
+        var path = "/session";
+        UserData user = new UserData(username, null, password);
+        JsonObject loginResult = this.makeRequest("POST", path, user, JsonObject.class, null);
+        return loginResult.get("authToken").getAsString();
+    }
+
+    public void logout(String authToken) throws ResponseException {
+        var path = "/session";
+        this.makeRequest("DELETE", path, null, null, authToken);
+    }
+
+    public GameData createGame(String gameName){
+        var path = "/game";
+        GameData newGame = new GameData(null, null, null, gameName, null);
+        JsonObject createGameResult = this.makeRequest("POST", path, newGame, )
     }
 
 // following methods based on petshop equivalent ServerFacade class
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws ResponseException {
         //default exeption throw, don't want to add uneccessary maven dep
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+
+            //adding support for authToken
+            if(authToken!=null){
+                http.setRequestProperty("Authorization",authToken);
+            }
 
             writeBody(request, http);
             http.connect();

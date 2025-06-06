@@ -11,12 +11,10 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class PreLoginClient {
-    private final String serverUrl;
     private final ServerFacade server;
     private LoginState state = LoginState.SIGNEDOUT; //
     Gson gson = new Gson();
-    public PreLoginClient(String serverUrl, ServerFacade server){
-        this.serverUrl = serverUrl;
+    public PreLoginClient(ServerFacade server){
         this.server = server;
     }
     public LoginState getLoginState(){

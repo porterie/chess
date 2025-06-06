@@ -1,11 +1,13 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import org.glassfish.grizzly.http.server.Response;
 import server.*;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class LoggedInClient {
     private final String serverUrl;
@@ -68,13 +70,18 @@ public class LoggedInClient {
     }
 
     public String playGame(String... params) throws ResponseException {
-        //TODO: remains to be implemented. For phase 5 do basic display
-        return "Not implemented";
+        if(params.length==2 && ((Objects.equals(params[1], "WHITE")) || (Objects.equals(params[1], "BLACK")))) {
+            DrawBoard display = new DrawBoard(Objects.equals(params[1], "WHITE"), new ChessGame());
+            display.print();
+            return "\n";
+        }
+        return "Expected: play <gameID> <WHITE || BLACK> ";
     }
 
     public String observeGame(String... params) throws ResponseException {
-        //TODO: remains to be implemented. For phase 5 do basic display
-        return "Not implemented";
+        DrawBoard display = new DrawBoard(true, new ChessGame());
+        display.print();
+        return "\n";
     }
 
     public String help() {

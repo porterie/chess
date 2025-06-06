@@ -36,7 +36,7 @@ public class DrawBoard {
                     }
                     displayBoard.append(color + " " + getPiece(i,j) + " ");
                 }
-                displayBoard.append(background + " " + i + " ");
+                displayBoard.append(background + " " + i + " \n");
             }
             displayBoard.append(background + "    a  b  c  d  e  f  g  h    \n");
         }else{//perspective black
@@ -54,10 +54,11 @@ public class DrawBoard {
                     }
                     displayBoard.append(color + " " + getPiece(i,j) + " ");
                 }
-                displayBoard.append(background + " " + i + " ");
+                displayBoard.append(background + " " + i + " \n");
             }
             displayBoard.append(background + "    h  g  f  e  d  c  b  a    \n");
         }
+        System.out.print(displayBoard.toString());
     }
 
     private String getPiece(Integer row, Integer col){

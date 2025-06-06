@@ -14,7 +14,7 @@ public class PreLoginREPL {
 
     public PreLoginREPL(String serverURL){
         server = new ServerFacade(serverURL);
-        preLoginClient = new PreLoginClient(serverURL, server);
+        preLoginClient = new PreLoginClient(server);
         loggedInREPL = new LoggedInREPL(serverURL, server);
     }
 

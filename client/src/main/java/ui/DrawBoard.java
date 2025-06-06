@@ -18,6 +18,7 @@ public class DrawBoard {
     public DrawBoard(Boolean perspectiveWhite, ChessGame game){
         this.game = game;
         this.perspectiveWhite = perspectiveWhite;
+        displayBoard = new StringBuilder();
     }
 
     public void print(){
@@ -62,7 +63,12 @@ public class DrawBoard {
     }
 
     private String getPiece(Integer row, Integer col){
-        ChessPiece.PieceType piece = game.getBoard().getPiece(new ChessPosition(row, col)).getPieceType();
+        ChessPiece.PieceType piece;
+        if(game.getBoard().getPiece(new ChessPosition(row,col)) != null) {
+            piece = game.getBoard().getPiece(new ChessPosition(row, col)).getPieceType();
+        }else{
+            piece = null;
+        }
         boolean isWhite = (game.getBoard().getPiece(new ChessPosition(row, col)).getTeamColor()== ChessGame.TeamColor.WHITE);
         switch(piece){
             case KING:

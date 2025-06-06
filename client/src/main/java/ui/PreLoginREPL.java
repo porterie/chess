@@ -37,6 +37,7 @@ public class PreLoginREPL {
                     System.out.print(msg);
                 }
             }else{
+                System.out.println("trying to log in");
                 loggedInREPL.run();
             }
         }

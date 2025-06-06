@@ -71,8 +71,8 @@ public class LoggedInClient {
     }
 
     public String playGame(String... params) throws ResponseException {
-        if(params.length==2 && ((Objects.equals(params[1], "WHITE")) || (Objects.equals(params[1], "BLACK")))) {
-            DrawBoard display = new DrawBoard(Objects.equals(params[1], "WHITE"), new ChessGame());
+        if(params.length==2 && ((Objects.equals(params[1], "white")) || (Objects.equals(params[1], "black")))) {
+            DrawBoard display = new DrawBoard(Objects.equals(params[1], "white"), new ChessGame());
             display.print();
             return "\n";
         }
@@ -87,8 +87,11 @@ public class LoggedInClient {
 
     public String help() {
         return """
-                - register <username> <password> <email>
-                - login <username> <password>
+                - create <game name>
+                - list
+                - play <gameID> <WHITE|BLACK>
+                - observe <gameID>
+                - logout
                 - quit
                 - help
                 """;

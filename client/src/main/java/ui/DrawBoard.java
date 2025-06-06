@@ -24,10 +24,14 @@ public class DrawBoard {
     public void print(){
         if(perspectiveWhite) {
             displayBoard.append(SET_BG_COLOR_BLUE);
+            displayBoard.append(SET_TEXT_COLOR_WHITE);
             //chess square 3 chars long. BG color changes between the spaces between the chars
-            displayBoard.append(background + "    a  b  c  d  e  f  g  h    \n"); //top row always the same
+            displayBoard.append(background + "    ａ  ｂ  ｃ  ｄ  ｅ  ｆ  ｇ  ｈ    \n"); //top row always the same
+            displayBoard.append(SET_TEXT_COLOR_BLACK);
             for(int i = 8; i>=1; i--){//count down rows
+                displayBoard.append(SET_TEXT_COLOR_WHITE);
                 displayBoard.append(" " + i + " ");
+                displayBoard.append(SET_TEXT_COLOR_BLACK);
                 for(int j = 1; j<= 8; j++){//count accross columns
                     String color;
                     if(i%2 == j%2){
@@ -35,17 +39,24 @@ public class DrawBoard {
                     }else{
                         color = light;
                     }
-                    displayBoard.append(color + " " + getPiece(i,j) + " ");
+                    displayBoard.append(color + "" + getPiece(i,j) + "");
                 }
+                displayBoard.append(SET_TEXT_COLOR_WHITE);
                 displayBoard.append(background + " " + i + " \n");
+                displayBoard.append(SET_TEXT_COLOR_BLACK);
             }
-            displayBoard.append(background + "    a  b  c  d  e  f  g  h    \n");
+            displayBoard.append(SET_TEXT_COLOR_WHITE);
+            displayBoard.append(background + "    ａ  ｂ  ｃ  ｄ  ｅ  ｆ  ｇ  ｈ    \n");
         }else{//perspective black
             displayBoard.append(SET_BG_COLOR_BLUE);
+            displayBoard.append(SET_TEXT_COLOR_WHITE);
             //chess square 3 chars long. BG color changes between the spaces between the chars
-            displayBoard.append(background + "    h  g  f  e  d  c  b  a    \n"); //top row always the same
+            displayBoard.append(background + "    ｈ  ｇ  ｆ  ｅ  ｄ  ｃ  ｂ  ａ    \n"); //top row always the same
+            displayBoard.append(SET_TEXT_COLOR_BLACK);
             for(int i = 1; i<=8; i++){//count up rows
+                displayBoard.append(SET_TEXT_COLOR_WHITE);
                 displayBoard.append(" " + i + " ");
+                displayBoard.append(SET_TEXT_COLOR_BLACK);
                 for(int j = 8; j>= 1; j--){//count back  accross columns
                     String color;
                     if(i%2 == j%2){
@@ -53,23 +64,28 @@ public class DrawBoard {
                     }else{
                         color = light;
                     }
-                    displayBoard.append(color + " " + getPiece(i,j) + " ");
+                    displayBoard.append(color + "" + getPiece(i,j) + "");
                 }
+                displayBoard.append(SET_TEXT_COLOR_WHITE);
                 displayBoard.append(background + " " + i + " \n");
+                displayBoard.append(SET_TEXT_COLOR_BLACK);
             }
-            displayBoard.append(background + "    h  g  f  e  d  c  b  a    \n");
+            displayBoard.append(SET_TEXT_COLOR_WHITE);
+            displayBoard.append(background + "    ｈ  ｇ  ｆ  ｅ  ｄ  ｃ  ｂ  ａ    \n");
         }
         System.out.print(displayBoard.toString());
     }
 
     private String getPiece(Integer row, Integer col){
         ChessPiece.PieceType piece;
+        boolean isWhite;
         if(game.getBoard().getPiece(new ChessPosition(row,col)) != null) {
             piece = game.getBoard().getPiece(new ChessPosition(row, col)).getPieceType();
+            isWhite = (game.getBoard().getPiece(new ChessPosition(row, col)).getTeamColor()== ChessGame.TeamColor.WHITE);
         }else{
             piece = null;
+            isWhite = false;
         }
-        boolean isWhite = (game.getBoard().getPiece(new ChessPosition(row, col)).getTeamColor()== ChessGame.TeamColor.WHITE);
         switch(piece){
             case KING:
                 if(isWhite){return WHITE_KING;}else{return BLACK_KING;}
@@ -84,7 +100,7 @@ public class DrawBoard {
             case PAWN:
                 if(isWhite){return WHITE_PAWN;}else{return BLACK_PAWN;}
             case null:
-                return " ";
+                return " 　 ";//this is a special space do not touch (unicode character space)
         }
     }
 

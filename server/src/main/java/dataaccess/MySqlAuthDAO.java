@@ -53,7 +53,6 @@ public class MySqlAuthDAO implements AuthDAO {
         executeUpdate(statement, authToken, username, json);
         System.out.println("Creating authToken: " + authToken + " for user: " + username);
         printAuthTableSchema();
-        //todo PASSWORD hashing
     }
 
     @Override
@@ -142,7 +141,7 @@ public class MySqlAuthDAO implements AuthDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Error: Unable to configure database");
+            throw new DataAccessException("Error: Unable to configure authentication database");
         }
     }
 

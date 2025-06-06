@@ -92,7 +92,7 @@ public class MySqlUserDAO implements UserDAO{
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Error: Unable to configure database");
+            throw new DataAccessException("Error: Unable to configure user database");
         }
     }
 }

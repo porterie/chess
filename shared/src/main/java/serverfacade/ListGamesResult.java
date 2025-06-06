@@ -1,4 +1,4 @@
-package server;
+package serverfacade;
 
 import model.GameData;
 

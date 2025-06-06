@@ -3,8 +3,9 @@ package ui;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
-import org.glassfish.grizzly.http.server.Response;
-import server.*;
+import serverfacade.CreateGameResult;
+import serverfacade.ListGamesResult;
+import serverfacade.ServerFacade;
 
 import java.util.Arrays;
 import java.util.Objects;

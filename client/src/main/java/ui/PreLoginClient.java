@@ -2,13 +2,11 @@ package ui;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
-import model.UserData;
-import server.LoginResult;
-import server.RegisterResult;
-import server.ServerFacade;
+import serverfacade.LoginResult;
+import serverfacade.RegisterResult;
+import serverfacade.ServerFacade;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class PreLoginClient {
     private final ServerFacade server;

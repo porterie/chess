@@ -1,4 +1,4 @@
-package server;
+package serverfacade;
 
 public record LoginRequest(
         String username,

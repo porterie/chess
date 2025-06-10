@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exception.ResponseException;
 
 import websocket.messages.ServerMessage;
+import websocket.commands.UserGameCommand;
 
 import javax.websocket.*;
 import java.io.IOException;

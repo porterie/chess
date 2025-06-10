@@ -24,6 +24,9 @@ public class LoggedInClient {
     public LoginState getLoginState(){
         return state;
     }
+    public void setLoginState(LoginState newState){
+        state = newState;
+    }
 
     public String eval(String input) {
         try {
@@ -36,12 +39,17 @@ public class LoggedInClient {
                 case "list" -> listGames(params);
                 case "play" -> playGame(params);
                 case "observe" -> observeGame(params);
-                case "quit" -> "quit";
+                case "quit" ->  quit();
                 default -> help();
             };
         } catch (ResponseException ex) {
             return ex.getMessage();
         }
+    }
+
+    private String quit() {
+        System.exit(0);
+        return "quit";
     }
 
     public String logout(String... params) throws ResponseException {
@@ -56,7 +64,7 @@ public class LoggedInClient {
             CreateGameResult response = server.createGame(params[0]);
             return String.format("Created game %s", params[0]);
         }else{
-            throw new ResponseException(400, "Expected: create <game name>");
+            throw new ResponseException("Expected: create <game name>");
         }
     }
 
@@ -64,25 +72,86 @@ public class LoggedInClient {
         //based on petshop listPets()
         ListGamesResult result = server.listGames();
         var list = new StringBuilder();
+        Integer i = 1;
         for (var game : result.games()){
-            list.append(gson.toJson(game)).append('\n');
+            //list.append(game.toString()).append('\n');
+            list.append("Game Number: ");
+            list.append(i);
+            list.append(", White User: ");
+            list.append(game.getWhiteUsername());
+            list.append(", Black User: ");
+            list.append(game.getBlackUsername());
+            list.append("\n");
+            i++;
         }
         return list.toString();
     }
 
     public String playGame(String... params) throws ResponseException {
         if(params.length==2 && ((Objects.equals(params[1], "white")) || (Objects.equals(params[1], "black")))) {
-            DrawBoard display = new DrawBoard(Objects.equals(params[1], "white"), new ChessGame());
-            display.print();
-            return "\n";
+            String color;
+            if(Objects.equals(params[1], "white")){
+                color = "WHITE";
+            }else{
+                color = "BLACK";
+            }
+            int internalGameID;
+            try {
+                internalGameID = Integer.valueOf(params[0]);
+            }catch(NumberFormatException e){
+                return "Invalid Game ID";
+            }
+            ListGamesResult gameList = server.listGames();
+            boolean foundGame = false;
+            int i = 1;
+            int serverGameID = -1;
+            for (var game : gameList.games()){
+                if (i == internalGameID) {
+                    foundGame = true;
+                    serverGameID = game.getGameID();
+                    break;
+                }
+                i++;
+            }
+            if(foundGame){
+                server.joinGame(color, serverGameID);
+                DrawBoard display = new DrawBoard(Objects.equals(params[1], "white"), new ChessGame());
+                display.print();
+                return "\n";
+            }else{
+                return "Invalid game ID";
+            }
         }
         return "Expected: play <gameID> <WHITE || BLACK> ";
     }
 
     public String observeGame(String... params) throws ResponseException {
-        DrawBoard display = new DrawBoard(true, new ChessGame());
-        display.print();
-        return "\n";
+        int  internalGameID;
+        try {
+            internalGameID = Integer.valueOf(params[0]);
+        }catch(NumberFormatException e){
+            return "Invalid Game ID";
+        }
+        ListGamesResult gameList = server.listGames();
+        boolean foundGame = false;
+        int i = 1;
+        int serverGameID = -1;
+        for (var game : gameList.games()){
+            if (i == internalGameID) {
+                foundGame = true;
+                serverGameID = game.getGameID();
+                break;
+            }
+            i++;
+        }
+        if(foundGame){
+            DrawBoard display = new DrawBoard(true, new ChessGame());
+            display.print();
+            return "\n";
+        }else{
+            return "Invalid game ID";
+        }
+
     }
 
     public String help() {

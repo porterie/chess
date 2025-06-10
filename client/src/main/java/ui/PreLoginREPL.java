@@ -20,7 +20,7 @@ public class PreLoginREPL {
 
     public void run() {
         System.out.println("Welcome to CHESS");
-        System.out.print(preLoginClient.help());
+        System.out.println(preLoginClient.help());
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
@@ -28,13 +28,17 @@ public class PreLoginREPL {
             resetFancyText();
             System.out.print("\n" + ">>>" + SET_TEXT_COLOR_WHITE);
             String line = scanner.nextLine();
+            if(loggedInREPL.loggedInClient.getLoginState()==LoginState.SIGNEDOUT){
+                preLoginClient.setLoginState(LoginState.SIGNEDOUT);
+                loggedInREPL.setLoginState(LoginState.SIGNEDIN);
+            }
             if(preLoginClient.getLoginState()==LoginState.SIGNEDOUT) {
                 try {
                     result = preLoginClient.eval(line);
-                    System.out.print(SET_TEXT_COLOR_BLUE + result);
+                    System.out.println(SET_TEXT_COLOR_BLUE + result);
                 } catch (Throwable e) {
                     String msg = e.toString();
-                    System.out.print(msg);
+                    System.out.println(msg);
                 }
             }else{
                 loggedInREPL.run();

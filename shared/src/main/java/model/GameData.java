@@ -44,4 +44,13 @@ public class GameData {
         blackUsername = name;
     }
 
+    @Override
+    public String toString() {
+        return "GameData{" +
+                "gameID=" + gameID +
+                ", gameName='" + gameName + '\'' +
+                ", whiteUsername='" + whiteUsername + '\'' +
+                ", blackUsername='" + blackUsername + '\'' +
+                '}';
+    }
 }

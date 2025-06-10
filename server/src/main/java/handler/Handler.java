@@ -59,7 +59,7 @@ public class Handler {
         } catch (DataAccessException exception) {
             response.type("application/json");
             response.status(500);
-            return "{ \"message\": \"Error: idk man.\" }";
+            return "{ \"message\": \"Error: data access.\" }";
         }
     }
 
@@ -80,7 +80,7 @@ public class Handler {
         }catch(DataAccessException exception){
             response.type("application/json");
             response.status(500);
-            return "{ \"message\": \"Error: idk man.\" }";
+            return "{ \"message\": \"Error: data access failure.\" }";
         }
 
     }

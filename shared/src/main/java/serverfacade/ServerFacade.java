@@ -85,7 +85,7 @@ public class ServerFacade {
         } catch (ResponseException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ResponseException(500, ex.getMessage());
+            throw new ResponseException(ex.getMessage());
         }
     }
 
@@ -108,7 +108,7 @@ public class ServerFacade {
                 }
             }
 
-            throw new ResponseException(status, "other failure: " + status);
+            throw new ResponseException("other failure: " + status);
         }
     }
 

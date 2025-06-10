@@ -19,7 +19,9 @@ public class PreLoginClient {
         return state;
     }
 
-
+    public void setLoginState(LoginState newState){
+        state = newState;
+    }
     public String eval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
@@ -43,7 +45,7 @@ public class PreLoginClient {
             state=LoginState.SIGNEDIN;
             return String.format("Registered user %s", params[0]);
         }else{
-            throw new ResponseException(400, "Expected: <username> <password> <email>");
+            throw new ResponseException("Expected: <username> <password> <email>");
         }
     }
 
@@ -53,7 +55,7 @@ public class PreLoginClient {
             state=LoginState.SIGNEDIN;
             return String.format("Logged in user %s", params[0]);
         }else{
-            throw new ResponseException(400, "Expected: <username> <password>");
+            throw new ResponseException("Expected: <username> <password>");
         }
 
     }

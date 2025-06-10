@@ -16,10 +16,15 @@ public class LoggedInREPL {
         this.server = server;
         loggedInClient = new LoggedInClient(serverUrl, server);
     }
-
+    public LoginState getLoginState(){
+        return loggedInClient.getLoginState();
+    }
+    public void setLoginState(LoginState newState){
+        loggedInClient.setLoginState(newState);
+    }
     public void run() {
         System.out.println("Welcome to CHESS");
-        System.out.print(loggedInClient.help());
+        System.out.println(loggedInClient.help());
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
@@ -30,10 +35,10 @@ public class LoggedInREPL {
             if(loggedInClient.getLoginState()==LoginState.SIGNEDIN) {
                 try {
                     result = loggedInClient.eval(line);
-                    System.out.print(SET_TEXT_COLOR_BLUE + result);
+                    System.out.println(SET_TEXT_COLOR_BLUE + result);
                 } catch (Throwable e) {
                     String msg = e.toString();
-                    System.out.print(msg);
+                    System.out.println(msg);
                 }
             }else{
                 break; //should break the while loop, equivalent to a quit from the user

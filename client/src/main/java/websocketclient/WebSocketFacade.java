@@ -5,6 +5,7 @@ import exception.ResponseException;
 
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
+import websocket.messages.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.net.URISyntaxException;
 public class WebSocketFacade extends Endpoint {
 
     Session session;
-
 
     public WebSocketFacade(String url) throws ResponseException {
         try {
@@ -29,9 +29,22 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
+                    ServerMessage genericNotification = new Gson().fromJson(message, ServerMessage.class);
                    // notificationHandler.notify(notification);
-                    // logic to deal with messages from server goes here todo
+                    ServerMessage.ServerMessageType type = genericNotification.getServerMessageType();
+                    switch(type){
+                        case ERROR:
+                            ServerError error = new Gson().fromJson(message, ServerError.class);
+                            System.out.println(error.getErrorMessage());
+                            System.out.println("\n>>>");
+                        case NOTIFICATION:
+                            ServerNotification notification = new Gson().fromJson(message, ServerNotification.class);
+                            System.out.println(notification.getNotifMessage());
+                            System.out.println("\n>>>");
+                        case LOAD_GAME:
+                            ServerLoadGame loadGame = new Gson().fromJson(message, ServerLoadGame.class);
+                            System.out.println("\n>>>");
+                    }
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
@@ -43,7 +56,6 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
-    //todo: implement websocket actions here
     //based on petshop
     public void sendUserCommand (UserGameCommand command) throws ResponseException {
         try {

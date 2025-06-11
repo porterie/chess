@@ -14,19 +14,12 @@ public class ChessGameClient  {
     private final String serverUrl;
     private final ServerFacade server;
     Gson gson = new Gson();
-    private LoginState state;
+
     public ChessGameClient(String serverUrl, ServerFacade server){
         this.serverUrl = serverUrl;
         this.server = server;
-        state = LoginState.SIGNEDIN;
     }
 
-    public LoginState getLoginState(){
-        return state;
-    }
-    public void setLoginState(LoginState newState){
-        state = newState;
-    }
 
     public String eval(String input) {
         try {
@@ -39,7 +32,6 @@ public class ChessGameClient  {
                 case "move" -> makeMove(params);
                 case "resign" -> resign(params);
                 case "highlight" -> hightLightMoves(params);
-                case "quit" ->  quit();
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -47,22 +39,12 @@ public class ChessGameClient  {
         }
     }
 
-    private String quit() {
-        System.exit(0);
-        return "quit";
-    }
 
 
 
     public String help() {
         return """
-                - create <game name>
-                - list
-                - play <gameID> <WHITE|BLACK>
-                - observe <gameID>
-                - logout
-                - quit
-                - help
+                - chessgame help menu (fix me)
                 """;
     }
 }

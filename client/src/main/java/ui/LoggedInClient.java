@@ -115,8 +115,10 @@ public class LoggedInClient {
             }
             if(foundGame){
                 server.joinGame(color, serverGameID);
-                DrawBoard display = new DrawBoard(Objects.equals(params[1], "white"), new ChessGame());
-                display.print();
+                //todo: websocket here
+                //DrawBoard display = new DrawBoard(Objects.equals(params[1], "white"), new ChessGame());
+                //display.print();
+
                 return "\n";
             }else{
                 return "Invalid game ID";

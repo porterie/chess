@@ -1,6 +1,7 @@
 package ui;
 
 import serverfacade.ServerFacade;
+import websocket.messages.ServerLoadGame;
 
 import java.util.Scanner;
 
@@ -14,9 +15,9 @@ import static ui.EscapeSequences.RESET_TEXT_UNDERLINE;
 public class ChessGameREPL {
     ServerFacade server; //pass into client instances
     ChessGameClient chessGameClient;
-    public ChessGameREPL(String serverUrl, ServerFacade server){
+    public ChessGameREPL(String serverUrl, ServerFacade server, Integer gameID, ServerLoadGame.PlayerType playerType){
         this.server = server;
-        chessGameClient = new ChessGameClient(serverUrl, server);
+        chessGameClient = new ChessGameClient(serverUrl, server, gameID, playerType);
     }
 
     public void run() {

@@ -6,6 +6,7 @@ import exception.ResponseException;
 import serverfacade.CreateGameResult;
 import serverfacade.ListGamesResult;
 import serverfacade.ServerFacade;
+import websocket.messages.ServerLoadGame;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -14,8 +15,9 @@ public class ChessGameClient  {
     private final String serverUrl;
     private final ServerFacade server;
     Gson gson = new Gson();
-
-    public ChessGameClient(String serverUrl, ServerFacade server){
+    Integer gameID;
+    ServerLoadGame.PlayerType playerType;
+    public ChessGameClient(String serverUrl, ServerFacade server, Integer gameID, ServerLoadGame.PlayerType playerType){
         this.serverUrl = serverUrl;
         this.server = server;
     }
@@ -39,7 +41,14 @@ public class ChessGameClient  {
         }
     }
 
+    public String redraw(){
+        ChessGame game = server.
+        if(playerType== ServerLoadGame.PlayerType.BLACK){
 
+        }else{
+
+        }
+    }
 
 
     public String help() {

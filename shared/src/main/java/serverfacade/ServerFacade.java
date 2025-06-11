@@ -1,5 +1,6 @@
 package serverfacade;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -14,6 +15,7 @@ public class ServerFacade {
 
     private final String serverUrl;
     private String authToken;
+    private WebSocketFacade
 
     public ServerFacade(String url) {
         serverUrl = url;
@@ -62,6 +64,7 @@ public class ServerFacade {
         return this.makeRequest("GET", path, null, ListGamesResult.class, authToken);
     }
 
+    public ChessGame getCurrentGame(){return }
 
 
 // following methods based on petshop equivalent ServerFacade class

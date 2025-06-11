@@ -1,8 +1,10 @@
 package websocketclient;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
 
+import ui.DrawBoard;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 import websocket.messages.*;
@@ -16,7 +18,7 @@ import java.net.URISyntaxException;
 public class WebSocketFacade extends Endpoint {
 
     Session session;
-
+    ChessGame currentGame;
     public WebSocketFacade(String url) throws ResponseException {
         try {
             url = url.replace("http", "ws");
@@ -43,6 +45,16 @@ public class WebSocketFacade extends Endpoint {
                             System.out.println("\n>>>");
                         case LOAD_GAME:
                             ServerLoadGame loadGame = new Gson().fromJson(message, ServerLoadGame.class);
+                            ChessGame game = loadGame.getGame();
+                            currentGame = game;
+                            ServerLoadGame.PlayerType playerType = loadGame.getPlayerType();
+                            DrawBoard drawBoard;
+                            if(playerType== ServerLoadGame.PlayerType.BLACK){
+                                drawBoard = new DrawBoard(false, game);
+                            }else{
+                                drawBoard = new DrawBoard(true, game);
+                            }
+                            drawBoard.print();
                             System.out.println("\n>>>");
                     }
                 }
@@ -65,5 +77,10 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
+    public void updateGame(ChessGame game){
+        currentGame = game;
+    }
+
+    public ChessGame getCurrentGame(){return currentGame;}
 
 }

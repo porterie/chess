@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.*;
 
 import exception.ResponseException;
-
+import websocketclient.WebSocketFacade;
 
 
 public class ServerFacade {
@@ -15,10 +15,16 @@ public class ServerFacade {
 
     private final String serverUrl;
     private String authToken;
-    private WebSocketFacade
+    private WebSocketFacade webSocketFacade;
 
     public ServerFacade(String url) {
         serverUrl = url;
+        try {
+            webSocketFacade = new WebSocketFacade(url);
+        }catch(ResponseException e){
+            System.out.println("Error initializing websocket");
+            System.out.println(e.getMessage());
+        }
     }
 
     public String getAuthToken(){
@@ -64,7 +70,7 @@ public class ServerFacade {
         return this.makeRequest("GET", path, null, ListGamesResult.class, authToken);
     }
 
-    public ChessGame getCurrentGame(){return }
+    public ChessGame getCurrentGame(){return webSocketFacade.getCurrentGame();}
 
 
 // following methods based on petshop equivalent ServerFacade class

@@ -3,13 +3,10 @@ package ui;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
-import serverfacade.CreateGameResult;
-import serverfacade.ListGamesResult;
 import serverfacade.ServerFacade;
 import websocket.messages.ServerLoadGame;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class ChessGameClient  {
     private final String serverUrl;
@@ -42,12 +39,14 @@ public class ChessGameClient  {
     }
 
     public String redraw(){
-        ChessGame game = server.
+        ChessGame game = server.getCurrentGame();
+        DrawBoard drawBoard;
         if(playerType== ServerLoadGame.PlayerType.BLACK){
-
+            drawBoard = new DrawBoard(false, game);
         }else{
-
+            drawBoard = new DrawBoard(true, game);
         }
+        return "\n";
     }
 
 

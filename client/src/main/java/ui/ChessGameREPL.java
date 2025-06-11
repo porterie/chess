@@ -6,11 +6,6 @@ import websocket.messages.ServerLoadGame;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
-import static ui.EscapeSequences.RESET_BG_COLOR;
-import static ui.EscapeSequences.RESET_TEXT_BLINKING;
-import static ui.EscapeSequences.RESET_TEXT_BOLD_FAINT;
-import static ui.EscapeSequences.RESET_TEXT_COLOR;
-import static ui.EscapeSequences.RESET_TEXT_UNDERLINE;
 
 public class ChessGameREPL {
     ServerFacade server; //pass into client instances

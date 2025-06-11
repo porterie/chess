@@ -10,9 +10,10 @@ import static ui.EscapeSequences.*;
 public class ChessGameREPL {
     ServerFacade server; //pass into client instances
     ChessGameClient chessGameClient;
-    public ChessGameREPL(String serverUrl, ServerFacade server, Integer gameID, ServerLoadGame.PlayerType playerType){
+
+    public ChessGameREPL(String serverUrl, ServerFacade server, Integer gameID, ServerLoadGame.PlayerType playerType, String username){
         this.server = server;
-        chessGameClient = new ChessGameClient(serverUrl, server, gameID, playerType);
+        chessGameClient = new ChessGameClient(serverUrl, server, gameID, playerType, username);
     }
 
     public void run() {

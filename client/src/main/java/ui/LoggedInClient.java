@@ -15,6 +15,7 @@ public class LoggedInClient {
     private final ServerFacade server;
     Gson gson = new Gson();
     private LoginState state;
+    String username;
     public LoggedInClient(String serverUrl, ServerFacade server){
         this.serverUrl = serverUrl;
         this.server = server;

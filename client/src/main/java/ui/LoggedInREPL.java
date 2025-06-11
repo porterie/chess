@@ -12,6 +12,7 @@ public class LoggedInREPL {
     //based on petshop repl with adjustments for multiple repls
     ServerFacade server; //pass into client instances
     LoggedInClient loggedInClient;
+
     public LoggedInREPL(String serverUrl, ServerFacade server){
         this.server = server;
         loggedInClient = new LoggedInClient(serverUrl, server);

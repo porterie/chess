@@ -7,6 +7,8 @@ import java.io.*;
 import java.net.*;
 
 import exception.ResponseException;
+import websocket.commands.UserGameCommand;
+import websocket.commands.UserMove;
 import websocketclient.WebSocketFacade;
 
 
@@ -72,7 +74,12 @@ public class ServerFacade {
 
     public ChessGame getCurrentGame(){return webSocketFacade.getCurrentGame();}
 
-
+    public void playerMove(UserMove moveCommand) throws ResponseException {
+        webSocketFacade.sendUserCommand(moveCommand);
+    }
+    public void sendCommand(UserGameCommand command) throws ResponseException {
+        webSocketFacade.sendUserCommand(command);
+    }
 // following methods based on petshop equivalent ServerFacade class
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws ResponseException {
         //default exeption throw, don't want to add uneccessary maven dep

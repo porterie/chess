@@ -7,6 +7,8 @@ import exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import service.GameService;
+import service.UserService;
 import websocket.commands.*;
 import websocket.messages.*;
 
@@ -18,6 +20,12 @@ import java.util.Timer;
 public class WebSocketHandler {
     //todo: implement
     //private final ConnectionManager connections = new ConnectionManager();
+    UserService userService;
+    GameService gameService;
+    public WebSocketHandler(UserService userService, GameService gameService){
+        this.userService = userService;
+        this.gameService = gameService;
+    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
@@ -25,9 +33,13 @@ public class WebSocketHandler {
         UserGameCommand.CommandType type = command.getCommandType();
         switch (type) {
             case CONNECT:
+                UserConnect userConnect = new Gson().fromJson(message, UserConnect.class);
             case LEAVE:
+                UserLeave userLeave = new Gson().fromJson(message, UserLeave.class);
             case RESIGN:
+                UserResign userResign = new Gson().fromJson(message, UserResign.class);
             case MAKE_MOVE:
+                UserMove userMove = new Gson().fromJson(message, UserMove.class);
         }
     }
 /*

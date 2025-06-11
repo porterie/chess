@@ -23,7 +23,6 @@ public class ChessGameClient  {
     Gson gson = new Gson();
     Integer gameID;
     ServerLoadGame.PlayerType playerType;
-    String username;
     private final Set<String> validColumns = Set.of("1", "2", "3", "4", "5", "6", "7", "8");
     private final Set<String> validRows = Set.of("a", "b", "c", "d", "e", "f", "g", "h");
     private static final Map<String, Integer> letterToNumber = Map.of(
@@ -35,12 +34,11 @@ public class ChessGameClient  {
             "QUEEN", ChessPiece.PieceType.QUEEN, "ROOK", ChessPiece.PieceType.ROOK,
             "BISHOP", ChessPiece.PieceType.BISHOP, "KNIGHT", ChessPiece.PieceType.KNIGHT
     );
-    public ChessGameClient(String serverUrl, ServerFacade server, Integer gameID, ServerLoadGame.PlayerType playerType, String username){
+    public ChessGameClient(String serverUrl, ServerFacade server, Integer gameID, ServerLoadGame.PlayerType playerType){
         this.serverUrl = serverUrl;
         this.server = server;
         this.playerType = playerType;
         this.gameID = gameID;
-        this.username = username;
     }
 
 
@@ -154,7 +152,7 @@ public class ChessGameClient  {
         }
         UserLeave leaveCommand = new UserLeave(UserGameCommand.CommandType.LEAVE, server.getAuthToken(), gameID, color);
         try{server.sendCommand(leaveCommand);
-            return "Left game\n";
+            return "quit";
         } catch (ResponseException e) {
             System.out.println(e.getMessage());
             return "Error while leaving\n";

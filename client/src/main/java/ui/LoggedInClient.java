@@ -6,6 +6,9 @@ import exception.ResponseException;
 import serverfacade.CreateGameResult;
 import serverfacade.ListGamesResult;
 import serverfacade.ServerFacade;
+import websocket.commands.UserConnect;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ServerLoadGame;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -16,10 +19,13 @@ public class LoggedInClient {
     Gson gson = new Gson();
     private LoginState state;
     String username;
+    public boolean inGame;
+    ChessGameREPL chessGameREPL;
     public LoggedInClient(String serverUrl, ServerFacade server){
         this.serverUrl = serverUrl;
         this.server = server;
         state = LoginState.SIGNEDIN;
+        inGame = false;
     }
 
     public LoginState getLoginState(){
@@ -91,10 +97,13 @@ public class LoggedInClient {
     public String playGame(String... params) throws ResponseException {
         if(params.length==2 && ((Objects.equals(params[1], "white")) || (Objects.equals(params[1], "black")))) {
             String color;
+            ServerLoadGame.PlayerType playerType;
             if(Objects.equals(params[1], "white")){
                 color = "WHITE";
+                playerType = ServerLoadGame.PlayerType.WHITE;
             }else{
                 color = "BLACK";
+                playerType = ServerLoadGame.PlayerType.BLACK;
             }
             int internalGameID;
             try {
@@ -116,10 +125,11 @@ public class LoggedInClient {
             }
             if(foundGame){
                 server.joinGame(color, serverGameID);
-                //todo: websocket here
-                //DrawBoard display = new DrawBoard(Objects.equals(params[1], "white"), new ChessGame());
-                //display.print();
-
+                UserConnect userConnect = new UserConnect(UserGameCommand.CommandType.CONNECT, server.getAuthToken(), serverGameID, color);
+                server.sendCommand(userConnect);
+                chessGameREPL = new ChessGameREPL(serverUrl, server, serverGameID, playerType);
+                chessGameREPL.run();
+                inGame = true;
                 return "\n";
             }else{
                 return "Invalid game ID";
@@ -131,7 +141,7 @@ public class LoggedInClient {
     public String observeGame(String... params) throws ResponseException {
         int  internalGameID;
         try {
-            internalGameID = Integer.valueOf(params[0]);
+            internalGameID = Integer.parseInt(params[0]);
         }catch(NumberFormatException e){
             return "Invalid Game ID";
         }
@@ -148,8 +158,11 @@ public class LoggedInClient {
             i++;
         }
         if(foundGame){
-            DrawBoard display = new DrawBoard(true, new ChessGame());
-            display.print();
+            UserConnect userConnect = new UserConnect(UserGameCommand.CommandType.CONNECT, server.getAuthToken(), serverGameID, "OBSERVER");
+            server.sendCommand(userConnect);
+            chessGameREPL = new ChessGameREPL(serverUrl, server, serverGameID, ServerLoadGame.PlayerType.OBSERVER);
+            chessGameREPL.run();
+            inGame = true;
             return "\n";
         }else{
             return "Invalid game ID";

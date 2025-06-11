@@ -3,12 +3,12 @@ package websocket.commands;
 public class UserConnect extends UserGameCommand {
     String username;
     String color;
-    CommandType type;
+    CommandType commandType;
     public UserConnect(CommandType commandType, String authToken, Integer gameID, String username, String color) {
         super(commandType, authToken, gameID);
         this.username = username;
         this.color = color;
-        type = CommandType.CONNECT;
+        commandType = CommandType.CONNECT;
     }
     public String getColor () {return color;}
 

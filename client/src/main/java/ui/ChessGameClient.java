@@ -180,7 +180,11 @@ public class ChessGameClient  {
     }
     public String help() {
         return """
-                - chessgame help menu (fix me)
+                - redraw
+                - leave
+                - move <start row> <start column> <end row> <end column> <OPTIONAL: promotion piece>
+                - resign
+                - highlight <piece row> <piece column> UNIMPLEMENTED
                 """;
     }
 }
